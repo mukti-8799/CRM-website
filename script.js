@@ -4,11 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Scroll Reveal Animation using IntersectionObserver
   const revealElements = document.querySelectorAll('.reveal');
   
-  const revealOnScroll = new IntersectionObserver((entries, observer) => {
+  const revealOnScroll = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('active');
-        observer.unobserve(entry.target);
+      } else {
+        // Remove so animation replays next time element enters view
+        entry.target.classList.remove('active');
       }
     });
   }, {
@@ -302,3 +304,31 @@ document.addEventListener('DOMContentLoaded', () => {
     return c;
   }
 });
+
+// ── Testimonial cards: replay animation every time they enter viewport ──
+(function vcardReplayObserver() {
+  const vcards = document.querySelectorAll('.vcard-grid .vcard');
+  if (!vcards.length) return;
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove first, then re-add on next frame so CSS transition re-fires
+        entry.target.classList.remove('active');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            entry.target.classList.add('active');
+          });
+        });
+      } else {
+        // Reset when out of view so animation can replay
+        entry.target.classList.remove('active');
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  vcards.forEach(card => obs.observe(card));
+}());
