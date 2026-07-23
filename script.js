@@ -287,6 +287,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000);
   };
 
+  // 12. Feature card click — darken on mousedown, reset on mouseleave
+  document.querySelectorAll('.fc-card').forEach(card => {
+    card.addEventListener('mousedown', () => card.classList.add('fc-pressed'));
+    card.addEventListener('mouseup',   () => card.classList.remove('fc-pressed'));
+    card.addEventListener('mouseleave',() => card.classList.remove('fc-pressed'));
+  });
+
   function createToastContainer() {
     const c = document.createElement('div');
     c.id = 'toastContainer';

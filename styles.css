@@ -73,6 +73,7 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  position: relative;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -1658,3 +1659,165 @@ a { color: inherit; text-decoration: none; }
 
 /* Toast container */
 .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 2000; display: flex; flex-direction: column; gap: 0.6rem; }
+
+/* ============================================
+   FEATURE CARDS — Teamway-style premium 2×2
+   ============================================ */
+
+.fc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 3.5rem;
+}
+
+/* ── Base card ── */
+.fc-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 2.4rem 2rem 2rem 2.4rem;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: 260px;
+  cursor: pointer;
+  transition:
+    background 300ms ease,
+    transform   300ms ease,
+    box-shadow  300ms ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ── Hover: lift + deepen bg + subtle shadow ── */
+.fc-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.11);
+}
+
+/* ── Card colors ── */
+.fc-peach    { background: #f5dece; }
+.fc-grey     { background: #e8e8e6; }
+.fc-lavender { background: #e5dff0; }
+.fc-sage     { background: #d8eadf; }
+
+.fc-peach:hover    { background: #edcfbb; }
+.fc-grey:hover     { background: #d8d8d6; }
+.fc-lavender:hover { background: #d5cce6; }
+.fc-sage:hover     { background: #c6dece; }
+
+/* Click pressed state */
+.fc-peach.fc-pressed    { background: #e5c4ac !important; transform: translateY(-2px) !important; }
+.fc-grey.fc-pressed     { background: #cecece !important; transform: translateY(-2px) !important; }
+.fc-lavender.fc-pressed { background: #c8bedd !important; transform: translateY(-2px) !important; }
+.fc-sage.fc-pressed     { background: #bad4c4 !important; transform: translateY(-2px) !important; }
+
+/* ── Content (left side) ── */
+.fc-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  max-width: 55%;
+  z-index: 1;
+  position: relative;
+}
+
+/* ── Status pill ── */
+.fc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255,255,255,0.75);
+  border-radius: 999px;
+  padding: 0.28rem 0.85rem 0.28rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.4rem;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(4px);
+}
+
+.fc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fc-peach    .fc-dot { background: #d4622a; }
+.fc-grey     .fc-dot { background: #1a1a1a; }
+.fc-lavender .fc-dot { background: #7c55cc; }
+.fc-sage     .fc-dot { background: #1a6b5c; }
+
+/* ── Title ── */
+.fc-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+/* ── Description ── */
+.fc-desc {
+  font-size: 0.88rem;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 1.6rem;
+  font-weight: 400;
+}
+
+/* ── CTA link ── */
+.fc-cta {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+  border-bottom: 1.5px solid #1a1a1a;
+  padding-bottom: 1px;
+  letter-spacing: 0.01em;
+  transition: opacity 300ms ease;
+}
+.fc-card:hover .fc-cta { opacity: 0.65; }
+
+/* ── Decorative shape (right side) ── */
+.fc-shape {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 48%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  transition: transform 300ms ease;
+}
+
+.fc-card:hover .fc-shape {
+  transform: scale(1.03);
+}
+
+.fc-shape svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .fc-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+  .fc-card  { min-height: 220px; padding: 1.8rem 1.5rem 1.6rem; }
+  .fc-content { max-width: 60%; }
+}
+
+@media (max-width: 560px) {
+  .fc-grid  { grid-template-columns: 1fr; }
+  .fc-card  { min-height: 200px; }
+  .fc-content { max-width: 65%; }
+  .fc-shape { width: 40%; }
+}
