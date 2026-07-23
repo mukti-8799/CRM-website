@@ -2288,3 +2288,149 @@ a { color: inherit; text-decoration: none; }
 .vcard-grid .vcard:nth-child(2).active:hover {
   transform: translateY(-16px) scale(1.04) !important;
 }
+
+/* ================================================================
+   ORBIT VISUALIZER — process section right panel
+   ================================================================ */
+
+.process-visual-display {
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* ── Central glowing core ── */
+.orb-core {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  z-index: 4;
+}
+
+.orb-pulse {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(42,157,143,0.18) 0%, transparent 70%);
+  animation: orbPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  0%,100% { transform: scale(1);   opacity: 0.7; }
+  50%      { transform: scale(1.5); opacity: 0.2; }
+}
+
+.orb-inner {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f0f8f6, #e8f4f2);
+  border: 2px solid rgba(42,157,143,0.35);
+  box-shadow:
+    0 0 0 8px rgba(42,157,143,0.07),
+    0 0 0 16px rgba(42,157,143,0.04),
+    0 8px 28px rgba(26,107,92,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: orbFloat 4s ease-in-out infinite;
+}
+
+.orb-inner svg { width: 36px; height: 36px; }
+
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* ── SVG orbit lines ── */
+.orbit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.orb-line {
+  stroke: rgba(26,107,92,0.18);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  animation: lineFlicker 3s ease-in-out infinite;
+}
+.orb-line:nth-child(1) { animation-delay: 0s; }
+.orb-line:nth-child(2) { animation-delay: 0.75s; }
+.orb-line:nth-child(3) { animation-delay: 1.5s; }
+.orb-line:nth-child(4) { animation-delay: 2.25s; }
+
+@keyframes lineFlicker {
+  0%,100% { opacity: 0.4; }
+  50%      { opacity: 1; stroke: rgba(42,157,143,0.5); }
+}
+
+/* ── Data nodes ── */
+.orb-node {
+  position: absolute;
+  z-index: 5;
+  background: #ffffff;
+  border: 1px solid rgba(26,107,92,0.12);
+  border-radius: 14px;
+  padding: 0.65rem 1rem;
+  min-width: 148px;
+  box-shadow: 0 4px 18px rgba(26,107,92,0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  animation: nodeFloat 5s ease-in-out infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.orb-node:hover {
+  transform: scale(1.06) !important;
+  box-shadow: 0 8px 28px rgba(26,107,92,0.18);
+}
+
+/* Node positions */
+.on-tl { top: 8%;  left: 2%;   animation-delay: 0s; }
+.on-tr { top: 6%;  right: 3%;  animation-delay: 1.2s; }
+.on-bl { bottom: 12%; left: 2%;  animation-delay: 0.6s; }
+.on-br { bottom: 10%; right: 2%; animation-delay: 1.8s; }
+
+@keyframes nodeFloat {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-7px); }
+}
+
+.on-icon { font-size: 1rem; line-height: 1; }
+
+.on-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #1a2e28;
+  white-space: nowrap;
+}
+
+/* Mini progress bar inside each node */
+.on-bar {
+  height: 3px;
+  background: rgba(26,107,92,0.12);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.on-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1a6b5c, #2a9d8f);
+  border-radius: 99px;
+  animation: barGrow 2.5s cubic-bezier(0.4,0,0.2,1) forwards;
+  width: 0% !important;
+}
+@keyframes barGrow {
+  to { width: var(--bar-target, 80%); }
+}
+.on-tl .on-fill { --bar-target: 88%; }
+.on-tr .on-fill { --bar-target: 72%; }
+.on-bl .on-fill { --bar-target: 95%; }
+.on-br .on-fill { --bar-target: 100%; }

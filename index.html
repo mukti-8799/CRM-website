@@ -480,15 +480,66 @@
           </div>
         </div>
 
-        <div class="process-visual-display reveal">
-          <div class="radar-ring ring-1"></div>
-          <div class="radar-ring ring-2"></div>
-          <div class="radar-ring ring-3"></div>
-          <div class="rocket-orb" id="rocketOrb">🚀</div>
-          <div class="node-badge nb-1"><span>📥</span> <span>Inbox & Calendar Synced</span></div>
-          <div class="node-badge nb-2"><span>⚡</span> <span>Auto Data Ingestion</span></div>
-          <div class="node-badge nb-3"><span>📊</span> <span>Graph Built</span></div>
-          <div class="node-badge nb-4"><span>✨</span> <span>100% Automated</span></div>
+        <div class="process-visual-display reveal" id="orbitViz">
+
+          <div class="orb-core">
+            <div class="orb-pulse"></div>
+            <div class="orb-inner">
+              <svg viewBox="0 0 44 44" fill="none">
+                <circle cx="22" cy="22" r="20" stroke="rgba(42,157,143,0.6)" stroke-width="1.5"/>
+                <polyline points="10,26 17,18 22,22 30,13 38,10" stroke="#2a9d8f" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="22" cy="22" r="3" fill="#1a6b5c"/>
+              </svg>
+            </div>
+          </div>
+
+          <svg class="orbit-svg" viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="210" cy="190" rx="155" ry="100" stroke="rgba(26,107,92,0.12)" stroke-width="1.2"/>
+            <ellipse cx="210" cy="190" rx="105" ry="68" stroke="rgba(26,107,92,0.10)" stroke-width="1"/>
+            <circle r="4" fill="#2a9d8f" opacity="0.85">
+              <animateMotion dur="6s" repeatCount="indefinite">
+                <mpath href="#outerO"/>
+              </animateMotion>
+            </circle>
+            <circle r="3" fill="#1a6b5c" opacity="0.5">
+              <animateMotion dur="6s" begin="3s" repeatCount="indefinite">
+                <mpath href="#outerO"/>
+              </animateMotion>
+            </circle>
+            <circle r="3.5" fill="#2a9d8f" opacity="0.7">
+              <animateMotion dur="4s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
+                <mpath href="#innerO"/>
+              </animateMotion>
+            </circle>
+            <ellipse id="outerO" cx="210" cy="190" rx="155" ry="100" display="none"/>
+            <ellipse id="innerO" cx="210" cy="190" rx="105" ry="68" display="none"/>
+            <line class="orb-line" x1="210" y1="190" x2="72" y2="112"/>
+            <line class="orb-line" x1="210" y1="190" x2="348" y2="108"/>
+            <line class="orb-line" x1="210" y1="190" x2="58" y2="268"/>
+            <line class="orb-line" x1="210" y1="190" x2="358" y2="278"/>
+          </svg>
+
+          <div class="orb-node on-tl">
+            <span class="on-icon">📥</span>
+            <span class="on-label">Inbox Synced</span>
+            <div class="on-bar"><div class="on-fill" style="--bar-target:88%"></div></div>
+          </div>
+          <div class="orb-node on-tr">
+            <span class="on-icon">⚡</span>
+            <span class="on-label">Data Ingested</span>
+            <div class="on-bar"><div class="on-fill" style="--bar-target:72%"></div></div>
+          </div>
+          <div class="orb-node on-bl">
+            <span class="on-icon">📊</span>
+            <span class="on-label">Graph Built</span>
+            <div class="on-bar"><div class="on-fill" style="--bar-target:95%"></div></div>
+          </div>
+          <div class="orb-node on-br">
+            <span class="on-icon">✨</span>
+            <span class="on-label">100% Automated</span>
+            <div class="on-bar"><div class="on-fill" style="--bar-target:100%"></div></div>
+          </div>
+
         </div>
       </div>
     </div>
