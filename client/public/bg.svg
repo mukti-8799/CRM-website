@@ -1,0 +1,257 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="1000" viewBox="0 0 600 1000">
+  <defs>
+    <radialGradient id="g1" cx="25%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#a8d8ea" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#f0e6ff" stop-opacity="0.3"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="80%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#f9c6e0" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#e8d5f5" stop-opacity="0.2"/>
+    </radialGradient>
+    <radialGradient id="g3" cx="50%" cy="75%" r="60%">
+      <stop offset="0%" stop-color="#c5b8e8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#b8d4f0" stop-opacity="0.3"/>
+    </radialGradient>
+    <filter id="blur1"><feGaussianBlur stdDeviation="18"/></filter>
+    <clipPath id="clip"><rect width="600" height="1000"/></clipPath>
+  </defs>
+  <!-- Soft color wash -->
+  <rect width="600" height="1000" fill="white"/>
+  <ellipse cx="120" cy="180" rx="280" ry="320" fill="url(#g1)" filter="url(#blur1)" clip-path="url(#clip)"/>
+  <ellipse cx="480" cy="380" rx="260" ry="300" fill="url(#g2)" filter="url(#blur1)" clip-path="url(#clip)"/>
+  <ellipse cx="300" cy="760" rx="280" ry="320" fill="url(#g3)" filter="url(#blur1)" clip-path="url(#clip)"/>
+  <!-- Hexagon grid -->
+  <!-- Row 0 -->
+  <g fill="none" stroke-width="1.5" opacity="0.55">
+    <!-- col helpers: hex pointy-top, w=70, h=80, horiz spacing=70, vert spacing=60 -->
+    <!-- each hex: M cx,cy  points of pointy-top hex with R=35 -->
+    <!-- Row 0 (y=0) -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,0)" stroke="#a0c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,0)" stroke="#b8a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,0)" stroke="#a0c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,0)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,0)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,0)" stroke="#c0b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,0)" stroke="#a8d0e8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,0)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,0)" stroke="#a8c8d8"/>
+    <!-- Row 0 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,40)" stroke="#b0c0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,40)" stroke="#c8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,40)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,40)" stroke="#d0b0c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,40)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,40)" stroke="#c0b8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,40)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,40)" stroke="#d0a8cc"/>
+    <!-- Row 1 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,80)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,80)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,80)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,80)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,80)" stroke="#b0c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,80)" stroke="#c8b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,80)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,80)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,80)" stroke="#a8c8d8"/>
+    <!-- Row 1 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,120)" stroke="#b0c0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,120)" stroke="#c8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,120)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,120)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,120)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,120)" stroke="#c0b8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,120)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,120)" stroke="#d0a8cc"/>
+    <!-- Row 2 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,160)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,160)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,160)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,160)" stroke="#c8a0c0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,160)" stroke="#b0c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,160)" stroke="#b8a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,160)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,160)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,160)" stroke="#a8c8d8"/>
+    <!-- Row 2 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,200)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,200)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,200)" stroke="#a8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,200)" stroke="#c8b0c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,200)" stroke="#b0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,200)" stroke="#c0b8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,200)" stroke="#a0cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,200)" stroke="#d8a8cc"/>
+    <!-- Row 3 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,240)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,240)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,240)" stroke="#a8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,240)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,240)" stroke="#b8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,240)" stroke="#9898c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,240)" stroke="#a8c8e8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,240)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,240)" stroke="#a8c4d8"/>
+    <!-- Row 3 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,280)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,280)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,280)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,280)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,280)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,280)" stroke="#c0b8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,280)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,280)" stroke="#d0a8cc"/>
+    <!-- Row 4 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,320)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,320)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,320)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,320)" stroke="#c8a0c0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,320)" stroke="#b0c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,320)" stroke="#c8b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,320)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,320)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,320)" stroke="#a8c8d8"/>
+    <!-- Row 4 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,360)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,360)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,360)" stroke="#a8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,360)" stroke="#c8b0c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,360)" stroke="#b0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,360)" stroke="#c0b8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,360)" stroke="#a0cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,360)" stroke="#d8a8cc"/>
+    <!-- Row 5 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,400)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,400)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,400)" stroke="#a8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,400)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,400)" stroke="#b8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,400)" stroke="#b8b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,400)" stroke="#a8c8e8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,400)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,400)" stroke="#a8c4d8"/>
+    <!-- Row 5 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,440)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,440)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,440)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,440)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,440)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,440)" stroke="#c0b8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,440)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,440)" stroke="#d0a8cc"/>
+    <!-- Row 6 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,480)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,480)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,480)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,480)" stroke="#c8a0c0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,480)" stroke="#b0c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,480)" stroke="#c8b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,480)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,480)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,480)" stroke="#a8c8d8"/>
+    <!-- Row 6 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,520)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,520)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,520)" stroke="#a8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,520)" stroke="#c8b0c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,520)" stroke="#b0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,520)" stroke="#c0b8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,520)" stroke="#a0cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,520)" stroke="#d8a8cc"/>
+    <!-- Row 7 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,560)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,560)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,560)" stroke="#a8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,560)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,560)" stroke="#b8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,560)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,560)" stroke="#a8c8e8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,560)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,560)" stroke="#a8c4d8"/>
+    <!-- Row 7 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,600)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,600)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,600)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,600)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,600)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,600)" stroke="#c0b8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,600)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,600)" stroke="#d0a8cc"/>
+    <!-- Row 8 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,640)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,640)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,640)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,640)" stroke="#c8a0c0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,640)" stroke="#b0c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,640)" stroke="#c8b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,640)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,640)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,640)" stroke="#a8c8d8"/>
+    <!-- Row 8 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,680)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,680)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,680)" stroke="#a8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,680)" stroke="#c8b0c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,680)" stroke="#b0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,680)" stroke="#c0b8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,680)" stroke="#a0cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,680)" stroke="#d8a8cc"/>
+    <!-- Row 9 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,720)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,720)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,720)" stroke="#a8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,720)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,720)" stroke="#b8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,720)" stroke="#c8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,720)" stroke="#a8c8e8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,720)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,720)" stroke="#a8c4d8"/>
+    <!-- Row 9 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,760)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,760)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,760)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,760)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,760)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,760)" stroke="#c0b8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,760)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,760)" stroke="#d0a8cc"/>
+    <!-- Row 10 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,800)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,800)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,800)" stroke="#a0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,800)" stroke="#c8a0c0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,800)" stroke="#b0c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,800)" stroke="#c8b0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,800)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,800)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,800)" stroke="#a8c8d8"/>
+    <!-- Row 10 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,840)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,840)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,840)" stroke="#a8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,840)" stroke="#c8b0c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,840)" stroke="#b0c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,840)" stroke="#c0b8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,840)" stroke="#a0cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,840)" stroke="#d8a8cc"/>
+    <!-- Row 11 -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(0,880)" stroke="#a8c4d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(70,880)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(140,880)" stroke="#a8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(210,880)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(280,880)" stroke="#b8c4e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(350,880)" stroke="#b8b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(420,880)" stroke="#a8c8e8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(490,880)" stroke="#d0a8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(560,880)" stroke="#a8c4d8"/>
+    <!-- Row 11 offset -->
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(35,920)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(105,920)" stroke="#c0b0d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(175,920)" stroke="#a8c0e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(245,920)" stroke="#c8a8c8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(315,920)" stroke="#b8c8e0"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(385,920)" stroke="#c0b8d8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(455,920)" stroke="#a8cce8"/>
+    <polygon points="35,0 70,20 70,60 35,80 0,60 0,20" transform="translate(525,920)" stroke="#d0a8cc"/>
+  </g>
+</svg>
