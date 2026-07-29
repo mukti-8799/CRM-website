@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LiveDashboardPreview from '../components/LiveDashboardPreview';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
   useEffect(() => {
@@ -180,7 +185,7 @@ setTimeout(() => {
   const totalSteps = processSteps.length;
   const autoCycle = setInterval(() => {
     currentStep = currentStep >= totalSteps ? 1 : currentStep + 1;
-    const nextStep = document.querySelector(`[data-step="${currentStep}"]`);
+    const nextStep = document.querySelector(`.process-step-item[data-step="${currentStep}"]`);
     if (nextStep) nextStep.click();
   }, 3500);
 
@@ -305,12 +310,203 @@ setTimeout(() => {
     card.addEventListener('mouseleave',() => card.classList.remove('fc-pressed'));
   });
 
+  // Video playback reset on scroll
+  const processVideo = document.getElementById('processVideo');
+  if (processVideo) {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.currentTime = 0;
+          entry.target.play().catch(e => console.log('Autoplay prevented:', e));
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.2 });
+    videoObserver.observe(processVideo);
+  }
+
+  // 13. Chaos Sticky Video — hover-gated scroll logic
+  const chaosBody        = document.querySelector('#chaosStickyBody');
+  const chaosVideoWrapper = document.querySelector('#chaosVideoWrapper');
+  const chaosVideos      = document.querySelectorAll('.chaos-video');
+  const chaosTotalSteps  = 4;
+
+  function setActiveStep(stepNum, dir = 1) {
+    // Video: scale-fade with exit class on outgoing
+    chaosVideos.forEach(v => {
+      const isActive = v.id === `chaos-vid-${stepNum}`;
+      if (isActive) {
+        v.classList.remove('exit');
+        v.classList.add('active');
+        v.play().catch(() => {});
+      } else if (v.classList.contains('active')) {
+        v.classList.add('exit');
+        v.classList.remove('active');
+        setTimeout(() => { v.classList.remove('exit'); v.pause(); }, 700);
+      }
+    });
+
+    // Left numbers: wheel roll animation
+    document.querySelectorAll('.chaos-num-item').forEach((n, i) => {
+      const isActive = n.getAttribute('data-step') === String(stepNum);
+      const wasActive = n.classList.contains('active');
+
+      // clear all animation classes
+      n.classList.remove('roll-in-up','roll-in-down','roll-out-up','roll-out-down','active');
+      n.style.transitionDelay = '0s';
+
+      if (isActive) {
+        // incoming: from bottom if scrolling down, from top if scrolling up
+        n.classList.add(dir > 0 ? 'roll-in-up' : 'roll-in-down');
+        n.classList.add('active');
+        n.style.transitionDelay = `${i * 0.04}s`;
+      } else if (wasActive) {
+        // outgoing: to top if scrolling down, to bottom if scrolling up
+        n.classList.add(dir > 0 ? 'roll-out-up' : 'roll-out-down');
+        setTimeout(() => {
+          n.classList.remove('roll-out-up','roll-out-down');
+          n.style.opacity = '0.22';
+        }, 420);
+      }
+    });
+
+    // Right desc: slide from right + blur clear
+    document.querySelectorAll('.chaos-desc-text').forEach(d => {
+      d.classList.toggle('active', d.id === `chaos-desc-${stepNum}`);
+    });
+
+    // Right col card: same active theme as left cards
+    const descCol = document.querySelector('.chaos-desc-col');
+    if (descCol) descCol.classList.add('active-desc');
+
+    // Dots
+    document.querySelectorAll('.chaos-dot').forEach(d => {
+      d.classList.toggle('active', d.getAttribute('data-step') === String(stepNum));
+    });
+  }
+
+  if (chaosBody && chaosVideos.length > 0) {
+    let currentStep     = 1;
+    let locked          = false;
+    let lockTimer       = null;
+    const LOCK_MS       = 1200;
+    setActiveStep(1);
+
+    // activate right col on load
+    const descCol = document.querySelector('.chaos-desc-col');
+    if (descCol) descCol.classList.add('active-desc');
+
+    // ── Scroll-position based trap ──
+    // chaos-body fills 5×100vh (1 sticky + 4 sentinels)
+    // We intercept scroll only while user is inside this zone
+    // and videos haven't all been seen yet
+
+    let isSectionVisible = false;
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isSectionVisible = entry.isIntersecting;
+        if (!entry.isIntersecting) {
+          // section left — release trap
+          if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(false);
+        }
+        // reset step when section comes back into view from top
+        if (entry.isIntersecting && entry.boundingClientRect.top > 0) {
+          currentStep = 1;
+          setActiveStep(1, 1);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sectionObserver.observe(chaosBody);
+
+    window.addEventListener('wheel', (e) => {
+      if (!isSectionVisible) return;
+
+      const dir       = e.deltaY > 0 ? 1 : -1;
+      const atStart   = currentStep === 1               && dir < 0;
+      const atEnd     = currentStep === chaosTotalSteps  && dir > 0;
+
+      // At boundaries — release, let page scroll naturally
+      if (atStart || atEnd) {
+        if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(false);
+        return;
+      }
+
+      // Mid sequence — trap scroll, advance video step
+      e.preventDefault();
+      if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(true);
+      if (locked) return;
+
+      const nextStep = currentStep + dir;
+      if (nextStep < 1 || nextStep > chaosTotalSteps) return;
+
+      locked      = true;
+      currentStep = nextStep;
+      setActiveStep(currentStep, dir);
+
+      if (lockTimer) clearTimeout(lockTimer);
+      lockTimer = setTimeout(() => {
+        locked    = false;
+        lockTimer = null;
+      }, LOCK_MS);
+
+    }, { passive: false });
+
+    // ── Dot click navigation ──
+    document.querySelectorAll('.chaos-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        if (locked) return;
+        const step = parseInt(dot.getAttribute('data-step'));
+        const dir  = step > currentStep ? 1 : -1;
+        currentStep = step;
+        setActiveStep(step, dir);
+      });
+    });
+  }
+
   function createToastContainer() {
     const c = document.createElement('div');
     c.id = 'toastContainer';
     c.className = 'toast-container';
     document.body.appendChild(c);
     return c;
+  }
+
+  // ── Quote card: replay animation every time chaos section enters viewport ──
+  const quoteCard = document.querySelector('.chaos-quote-card');
+  const quoteBars = document.querySelectorAll('.cq-bar');
+
+  if (quoteCard) {
+    const quoteObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Reset quote fade-in
+          quoteCard.style.animation = 'none';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              quoteCard.style.animation = '';
+            });
+          });
+
+          // Reset each bar's rise animation with stagger
+          quoteBars.forEach((bar, i) => {
+            bar.style.animation = 'none';
+            bar.style.transform = 'scaleY(0)';
+            const delay = i * 0.2;
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                bar.style.animation = '';
+                bar.style.setProperty('--d', `${delay}s`);
+              });
+            });
+          });
+        }
+      });
+    }, { threshold: 0.15 });
+
+    quoteObserver.observe(document.querySelector('.chaos-section') || quoteCard);
   }
 });
 
@@ -345,6 +541,99 @@ setTimeout(() => {
 // ── Login Modal — shows after 10 seconds ─────────────────────
 
 // ── Mini Dashboard — fully interactive inside homepage card ──
+
+  // ── Lenis Smooth Scroll + GSAP ScrollTrigger ──
+  // Home page only — cleaned up on unmount
+  const lenis = new Lenis({
+    duration: 1.4,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 2,
+  });
+
+  // Pause lenis when chaos trap is active
+  window.__chaosScrollTrapped = (val) => {
+    if (val) lenis.stop();
+    else     lenis.start();
+  };
+
+  // Sync lenis with GSAP ScrollTrigger
+  lenis.on('scroll', ScrollTrigger.update);
+
+  const lenisRaf = (time) => lenis.raf(time * 1000);
+  gsap.ticker.add(lenisRaf);
+  gsap.ticker.lagSmoothing(0);
+
+  // ── Parallax on hero elements ──
+  gsap.to('.hero-left-content', {
+    y: -60,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero-section',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1.5,
+    }
+  });
+
+  gsap.to('.hero-visual-container', {
+    y: -30,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero-section',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 2,
+    }
+  });
+
+  // ── Parallax on chaos bg blobs ──
+  gsap.to('.chaos-blob-1', {
+    y: -80,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.chaos-section',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 2,
+    }
+  });
+
+  gsap.to('.chaos-blob-2', {
+    y: 80,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.chaos-section',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 3,
+    }
+  });
+
+  // ── Stagger reveal for feature bar items ──
+  gsap.fromTo('.feature-bar-item',
+    { opacity: 0, y: 30 },
+    {
+      opacity: 1, y: 0,
+      duration: 0.7,
+      stagger: 0.12,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.feature-bar-section',
+        start: 'top 85%',
+        toggleActions: 'play none none reverse',
+      }
+    }
+  );
+
+  return () => {
+    lenis.destroy();
+    gsap.ticker.remove(lenisRaf);
+    ScrollTrigger.getAll().forEach(t => t.kill());
+    window.__chaosScrollTrapped = null;
+  };
 
     }, []);
 
@@ -402,7 +691,7 @@ setTimeout(() => {
           </div>
 
           <h1 className="hero-title">
-            BUILT <br />FOR <span className="script-accent">Sales</span>
+            BUILT <br />FOR <span className="script-accent" spellCheck={false}>Sales</span>
           </h1>
 
           <div className="annotation-bubble">
@@ -430,11 +719,9 @@ setTimeout(() => {
 
           {/*  Handwritten Paper Note Artifact  */}
           <div className="paper-note-card">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <div>
-              <span style={{display: 'block', fontWeight: '800'}}>Real Insights. Real Growth.</span>
-              <span style={{color: '#64748b', fontSize: '0.8rem', fontWeight: '500'}}>Trusted by 10,000+ teams</span>
-            </div>
+            <span>REAL INSIGHTS.</span>
+            <span>REAL GROWTH.</span>
+            <span>REAL RESULTS.</span>
           </div>
         </div>
 
@@ -450,7 +737,7 @@ setTimeout(() => {
               <div style={{fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600'}}>Error Infotech Dashboard</div>
               <div style={{fontSize: '0.8rem', color: 'var(--text-muted)'}}>Sarah Chen ▾</div>
             </div>
-            <div style={{padding: '0', display: 'flex', height: '460px'}}>
+            <div style={{padding: '0', display: 'flex', height: 'clamp(280px, 40vw, 460px)'}}>
               <LiveDashboardPreview />
             </div>
           </div>
@@ -534,209 +821,198 @@ setTimeout(() => {
     </div>
   </section>
 
-  {/*  6 Core Feature Grid  */}
-  <section className="features-section" id="features">
-    <div className="container">
-      <div className="section-header reveal">
-        <h2 className="section-title">Everything you need to scale revenue.</h2>
-        <p className="section-subtitle">Engineered for high-performing sales organizations that require speed, clarity, and automation.</p>
+    {/* Chaos Sticky Video Section */}
+  <section className="chaos-section" id="chaos">
+
+    {/* Decorative background blobs — visible around the section, not behind cards */}
+    <div className="chaos-bg-deco" aria-hidden="true">
+      <div className="chaos-blob chaos-blob-1"></div>
+      <div className="chaos-blob chaos-blob-2"></div>
+      <div className="chaos-blob chaos-blob-3"></div>
+    </div>
+
+    {/* Corner particle decorations — top-left & bottom-right */}
+    <div className="chaos-corner-deco chaos-corner-tl" aria-hidden="true">
+      <svg width="340" height="260" viewBox="0 0 340 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="4" fill="rgba(10,10,10,0.55)"/>
+        <circle cx="90" cy="55" r="3" fill="rgba(10,10,10,0.45)"/>
+        <circle cx="170" cy="30" r="3.5" fill="rgba(10,10,10,0.38)"/>
+        <circle cx="260" cy="90" r="2.5" fill="rgba(10,10,10,0.25)"/>
+        <circle cx="50" cy="130" r="3" fill="rgba(10,10,10,0.32)"/>
+        <circle cx="130" cy="160" r="2.5" fill="rgba(10,10,10,0.2)"/>
+        <circle cx="310" cy="40" r="2" fill="rgba(10,10,10,0.18)"/>
+        <circle cx="200" cy="180" r="2" fill="rgba(10,10,10,0.12)"/>
+        <line x1="18" y1="18" x2="90" y2="55" stroke="rgba(10,10,10,0.35)" strokeWidth="1.2"/>
+        <line x1="90" y1="55" x2="170" y2="30" stroke="rgba(10,10,10,0.28)" strokeWidth="1.1"/>
+        <line x1="170" y1="30" x2="260" y2="90" stroke="rgba(10,10,10,0.2)" strokeWidth="1"/>
+        <line x1="18" y1="18" x2="50" y2="130" stroke="rgba(10,10,10,0.3)" strokeWidth="1.1"/>
+        <line x1="50" y1="130" x2="130" y2="160" stroke="rgba(10,10,10,0.18)" strokeWidth="1"/>
+        <line x1="90" y1="55" x2="50" y2="130" stroke="rgba(10,10,10,0.22)" strokeWidth="1"/>
+        <line x1="170" y1="30" x2="310" y2="40" stroke="rgba(10,10,10,0.15)" strokeWidth="1"/>
+        <line x1="260" y1="90" x2="200" y2="180" stroke="rgba(10,10,10,0.1)" strokeWidth="1"/>
+        <line x1="130" y1="160" x2="200" y2="180" stroke="rgba(10,10,10,0.08)" strokeWidth="1"/>
+        <circle cx="18" cy="18" r="1.8" fill="rgba(255,255,255,0.7)"/>
+        <circle cx="90" cy="55" r="1.4" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="170" cy="30" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="50" cy="130" r="1.3" fill="rgba(255,255,255,0.45)"/>
+        <circle cx="260" cy="90" r="1.2" fill="rgba(255,255,255,0.3)"/>
+      </svg>
+    </div>
+
+    <div className="chaos-corner-deco chaos-corner-br" aria-hidden="true">
+      <svg width="340" height="260" viewBox="0 0 340 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="322" cy="242" r="4" fill="rgba(10,10,10,0.55)"/>
+        <circle cx="250" cy="205" r="3" fill="rgba(10,10,10,0.45)"/>
+        <circle cx="170" cy="230" r="3.5" fill="rgba(10,10,10,0.38)"/>
+        <circle cx="80" cy="170" r="2.5" fill="rgba(10,10,10,0.25)"/>
+        <circle cx="290" cy="130" r="3" fill="rgba(10,10,10,0.32)"/>
+        <circle cx="210" cy="100" r="2.5" fill="rgba(10,10,10,0.2)"/>
+        <circle cx="30" cy="220" r="2" fill="rgba(10,10,10,0.18)"/>
+        <circle cx="140" cy="80" r="2" fill="rgba(10,10,10,0.12)"/>
+        <line x1="322" y1="242" x2="250" y2="205" stroke="rgba(10,10,10,0.35)" strokeWidth="1.2"/>
+        <line x1="250" y1="205" x2="170" y2="230" stroke="rgba(10,10,10,0.28)" strokeWidth="1.1"/>
+        <line x1="170" y1="230" x2="80" y2="170" stroke="rgba(10,10,10,0.2)" strokeWidth="1"/>
+        <line x1="322" y1="242" x2="290" y2="130" stroke="rgba(10,10,10,0.3)" strokeWidth="1.1"/>
+        <line x1="290" y1="130" x2="210" y2="100" stroke="rgba(10,10,10,0.18)" strokeWidth="1"/>
+        <line x1="250" y1="205" x2="290" y2="130" stroke="rgba(10,10,10,0.22)" strokeWidth="1"/>
+        <line x1="170" y1="230" x2="30" y2="220" stroke="rgba(10,10,10,0.15)" strokeWidth="1"/>
+        <line x1="80" y1="170" x2="140" y2="80" stroke="rgba(10,10,10,0.1)" strokeWidth="1"/>
+        <line x1="210" y1="100" x2="140" y2="80" stroke="rgba(10,10,10,0.08)" strokeWidth="1"/>
+        <circle cx="322" cy="242" r="1.8" fill="rgba(255,255,255,0.7)"/>
+        <circle cx="250" cy="205" r="1.4" fill="rgba(255,255,255,0.6)"/>
+        <circle cx="170" cy="230" r="1.5" fill="rgba(255,255,255,0.5)"/>
+        <circle cx="290" cy="130" r="1.3" fill="rgba(255,255,255,0.45)"/>
+        <circle cx="80" cy="170" r="1.2" fill="rgba(255,255,255,0.3)"/>
+      </svg>
+    </div>
+
+    {/* Quote — top-right corner, no card, exact pic style */}
+    <div className="chaos-quote-card" aria-label="Quote">
+      {/* animated brush stroke bars */}
+      <div className="cq-grid" aria-hidden="true">
+        <span className="cq-bar" style={{'--c':'rgba(180,200,195,0.35)', '--h':'78%', '--d':'0s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(200,185,155,0.28)', '--h':'92%', '--d':'0.2s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(190,175,210,0.3)', '--h':'65%', '--d':'0.4s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(42,157,143,0.2)', '--h':'85%', '--d':'0.6s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(220,180,170,0.32)', '--h':'70%', '--d':'0.8s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(155,185,195,0.28)', '--h':'88%', '--d':'1.0s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(175,160,140,0.25)', '--h':'60%', '--d':'1.2s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(26,107,92,0.15)', '--h':'95%', '--d':'1.4s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(210,190,175,0.3)', '--h':'72%', '--d':'1.6s'}}></span>
+        <span className="cq-bar" style={{'--c':'rgba(160,185,175,0.25)', '--h':'82%', '--d':'1.8s'}}></span>
       </div>
-
-      <div className="nfc-grid">
-
-        {/*  Card 1: Relationship Graph  */}
-        <article className="nfc-card nfc-peach">
-          <div className="nfc-left">
-            <span className="nfc-badge"><span className="nfc-dot nfc-dot-orange"></span>Active Feature</span>
-            <h3 className="nfc-title">Relationship Graph</h3>
-            <p className="nfc-desc">Map out complex organizational structures automatically. Know exactly who holds the buying power before you pitch.</p>
-            <a href="#" className="nfc-link">Learn more &#x2192;</a>
-          </div>
-          <div className="nfc-right" aria-hidden="true">
-            <svg viewBox="0 0 320 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="168" y1="118" x2="234" y2="68"  stroke="#e07040" strokeWidth="2" strokeDasharray="6 5" strokeLinecap="round"/>
-              <line x1="152" y1="118" x2="90"  y2="68"  stroke="#e07040" strokeWidth="2" strokeDasharray="6 5" strokeLinecap="round"/>
-              <line x1="140" y1="132" x2="80"  y2="168" stroke="#e07040" strokeWidth="2" strokeDasharray="6 5" strokeLinecap="round"/>
-              <line x1="186" y1="138" x2="238" y2="174" stroke="#e07040" strokeWidth="2" strokeDasharray="6 5" strokeLinecap="round"/>
-              <line x1="160" y1="158" x2="160" y2="210" stroke="#e07040" strokeWidth="2" strokeDasharray="6 5" strokeLinecap="round"/>
-              <circle cx="160" cy="136" r="36" fill="#e8956a"/>
-              <circle cx="160" cy="128" r="9"  fill="white" opacity="0.92"/>
-              <path d="M144 152 Q160 144 176 152" stroke="white" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
-              <rect x="208" y="18"  width="80" height="64" rx="14" fill="#f0c4a8"/>
-              <circle cx="248" cy="36" r="10" fill="#e07040" opacity="0.8"/>
-              <line x1="230" y1="52" x2="274" y2="52" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.55"/>
-              <line x1="230" y1="62" x2="264" y2="62" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.4"/>
-              <rect x="28"  y="18"  width="80" height="64" rx="14" fill="#f0c4a8"/>
-              <circle cx="68"  cy="36" r="10" fill="#e07040" opacity="0.8"/>
-              <line x1="50"  y1="52" x2="94"  y2="52" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.55"/>
-              <line x1="50"  y1="62" x2="84"  y2="62" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.4"/>
-              <rect x="26"  y="148" width="80" height="64" rx="14" fill="#f0c4a8"/>
-              <circle cx="66"  cy="166" r="10" fill="#e07040" opacity="0.8"/>
-              <line x1="48"  y1="182" x2="92"  y2="182" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.55"/>
-              <line x1="48"  y1="192" x2="80"  y2="192" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.4"/>
-              <rect x="212" y="154" width="80" height="64" rx="14" fill="#f0c4a8"/>
-              <circle cx="252" cy="172" r="10" fill="#e07040" opacity="0.8"/>
-              <line x1="234" y1="188" x2="278" y2="188" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.55"/>
-              <line x1="234" y1="198" x2="268" y2="198" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.4"/>
-              <rect x="120" y="216" width="80" height="58" rx="14" fill="#f5d8c4"/>
-              <circle cx="160" cy="232" r="9"  fill="#e07040" opacity="0.7"/>
-              <line x1="143" y1="246" x2="177" y2="246" stroke="#e07040" strokeWidth="2.2" strokeLinecap="round" opacity="0.45"/>
-            </svg>
-          </div>
-        </article>
-
-        {/*  Card 2: Revenue Forecasting  */}
-        <article className="nfc-card nfc-grey">
-          <div className="nfc-left">
-            <span className="nfc-badge"><span className="nfc-dot nfc-dot-grey"></span>94% Accuracy</span>
-            <h3 className="nfc-title">Revenue Forecasting</h3>
-            <p className="nfc-desc">AI-driven models predict your quarter with 94% accuracy based on historical deal velocity and current engagement.</p>
-            <a href="#" className="nfc-link">Explore model &#x2192;</a>
-          </div>
-          <div className="nfc-right" aria-hidden="true">
-            <svg viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="140" y="10"  width="148" height="90" rx="12" fill="white" stroke="#d8d8e0" strokeWidth="1.5"/>
-              <polyline points="152,80 168,62 186,68 204,44 222,38 268,18" stroke="#aaaabc" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="152" cy="80" r="3.5" fill="#aaaabc"/>
-              <circle cx="168" cy="62" r="3.5" fill="#aaaabc"/>
-              <circle cx="186" cy="68" r="3.5" fill="#aaaabc"/>
-              <circle cx="204" cy="44" r="3.5" fill="#aaaabc"/>
-              <circle cx="222" cy="38" r="3.5" fill="#aaaabc"/>
-              <rect x="10"  y="118" width="180" height="130" rx="12" fill="white" stroke="#d8d8e0" strokeWidth="1.5"/>
-              <rect x="24"  y="192" width="26"  height="44"  rx="6" fill="#c8c8d8"/>
-              <rect x="58"  y="172" width="26"  height="64"  rx="6" fill="#b8b8cc"/>
-              <rect x="92"  y="152" width="26"  height="84"  rx="6" fill="#a8a8bc"/>
-              <defs>
-                <radialGradient id="lensGrad" cx="40%" cy="35%" r="60%">
-                  <stop offset="0%"   stop-color="#ffffff" stop-opacity="1"/>
-                  <stop offset="40%"  stop-color="#f0f0f8" stop-opacity="0.95"/>
-                  <stop offset="100%" stop-color="#d8d8ec" stop-opacity="0.88"/>
-                </radialGradient>
-                <radialGradient id="rimGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="70%"  stop-color="transparent"/>
-                  <stop offset="100%" stop-color="#b0b0cc" stop-opacity="0.4"/>
-                </radialGradient>
-                <linearGradient id="shineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%"   stop-color="white" stop-opacity="0.85"/>
-                  <stop offset="100%" stop-color="white" stop-opacity="0"/>
-                </linearGradient>
-                <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%"   stop-color="#c8c8dc"/>
-                  <stop offset="100%" stop-color="#9898b4"/>
-                </linearGradient>
-              </defs>
-              <circle cx="148" cy="188" r="36" fill="none" stroke="#c0c0d4" strokeWidth="4"/>
-              <circle cx="148" cy="188" r="34" fill="url(#lensGrad)"/>
-              <circle cx="148" cy="188" r="34" fill="url(#rimGrad)"/>
-              <circle cx="148" cy="188" r="26" fill="rgba(235,235,248,0.72)" stroke="rgba(180,180,210,0.35)" strokeWidth="1"/>
-              <ellipse cx="138" cy="174" rx="11" ry="6" fill="url(#shineGrad)" opacity="0.75" transform="rotate(-30 138 174)"/>
-              <circle cx="132" cy="170" r="3" fill="white" opacity="0.65"/>
-              <line x1="172" y1="210" x2="188" y2="228" stroke="url(#handleGrad)" strokeWidth="7" strokeLinecap="round"/>
-              <polyline points="139,196 148,174 157,196" stroke="#9090aa" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <line x1="148" y1="174" x2="148" y2="198" stroke="#9090aa" strokeWidth="2.2" strokeLinecap="round"/>
-              <rect x="206" y="118" width="82"  height="130" rx="12" fill="white" stroke="#d8d8e0" strokeWidth="1.5"/>
-              <circle cx="222" cy="140" r="5" fill="#c8c8d8"/>
-              <line x1="232" y1="140" x2="274" y2="140" stroke="#d8d8e0" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="222" cy="160" r="5" fill="#c8c8d8"/>
-              <line x1="232" y1="160" x2="274" y2="160" stroke="#d8d8e0" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="222" cy="180" r="5" fill="#c8c8d8"/>
-              <line x1="232" y1="180" x2="274" y2="180" stroke="#d8d8e0" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="222" cy="200" r="5" fill="#c8c8d8"/>
-              <line x1="232" y1="200" x2="268" y2="200" stroke="#d8d8e0" strokeWidth="2.5" strokeLinecap="round"/>
-              <circle cx="222" cy="220" r="5" fill="#c8c8d8"/>
-              <line x1="232" y1="220" x2="272" y2="220" stroke="#d8d8e0" strokeWidth="2.5" strokeLinecap="round"/>
-            </svg>
-          </div>
-        </article>
-
-        {/*  Card 3: Smart Sequences  */}
-        <article className="nfc-card nfc-lavender">
-          <div className="nfc-left">
-            <span className="nfc-badge"><span className="nfc-dot nfc-dot-purple"></span>Automated</span>
-            <h3 className="nfc-title">Smart Sequences</h3>
-            <p className="nfc-desc">Automate follow-ups based on buying signals, not just time delays. Trigger actions when they read your proposal.</p>
-            <a href="#" className="nfc-link">See how it works &#x2192;</a>
-          </div>
-          <div className="nfc-right" aria-hidden="true">
-            <svg viewBox="0 0 300 310" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M112,128 C130,90 155,60 186,56"  stroke="#b8aee0" strokeWidth="3.5" strokeDasharray="9 7" strokeLinecap="round" fill="none"/>
-              <path d="M112,182 C130,220 155,248 186,254" stroke="#b8aee0" strokeWidth="3.5" strokeDasharray="9 7" strokeLinecap="round" fill="none"/>
-              <circle cx="72" cy="155" r="44" fill="#e8e4f4" stroke="#b8aee0" strokeWidth="1.8"/>
-              <polygon points="62,138 62,172 96,155" fill="#7c6abf"/>
-              <line x1="186" y1="92"  x2="186" y2="130" stroke="#b8aee0" strokeWidth="2"/>
-              <circle cx="186" cy="130" r="4" fill="#b8aee0"/>
-              <line x1="186" y1="134" x2="186" y2="240" stroke="#b8aee0" strokeWidth="2"/>
-              <circle cx="186" cy="240" r="4" fill="#b8aee0"/>
-              <rect x="146" y="20"  width="80" height="72" rx="14" fill="#8b78cc"/>
-              <polyline points="152,38 186,58 220,38" stroke="rgba(230,220,255,0.9)" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <rect x="152" y="36"  width="68" height="44" rx="4" fill="none" stroke="rgba(230,220,255,0.4)" strokeWidth="1.2"/>
-              <line x1="234" y1="38" x2="292" y2="38" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="52" x2="284" y2="52" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="66" x2="290" y2="66" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <rect x="146" y="134" width="80" height="72" rx="14" fill="#d8d0f0" stroke="#b8aee0" strokeWidth="1.6"/>
-              <circle cx="186" cy="170" r="22" stroke="#7c6abf" strokeWidth="2" fill="white"/>
-              <line x1="186" y1="170" x2="186" y2="154" stroke="#7c6abf" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="186" y1="170" x2="199" y2="177" stroke="#7c6abf" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="150" x2="292" y2="150" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="164" x2="284" y2="164" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="178" x2="290" y2="178" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <rect x="146" y="244" width="80" height="66" rx="14" fill="#a898d8" stroke="#b8aee0" strokeWidth="1.6"/>
-              <polyline points="163,277 179,293 210,262" stroke="white" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <line x1="234" y1="258" x2="292" y2="258" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="271" x2="284" y2="271" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="234" y1="284" x2="290" y2="284" stroke="#c8c0e4" strokeWidth="2.2" strokeLinecap="round"/>
-            </svg>
-          </div>
-        </article>
-
-        {/*  Card 4: Enterprise Grade  */}
-        <article className="nfc-card nfc-sage">
-          <div className="nfc-left">
-            <span className="nfc-badge"><span className="nfc-dot nfc-dot-green"></span>SOC2 Certified</span>
-            <h3 className="nfc-title">Enterprise Grade</h3>
-            <p className="nfc-desc">SOC2 Type II certified, granular role-based access control, and audit logs to keep your most valuable data secure.</p>
-            <a href="#" className="nfc-link">Get in touch &#x2192;</a>
-          </div>
-          <div className="nfc-right" aria-hidden="true">
-            <svg viewBox="0 0 310 290" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="140" cy="148" r="118" stroke="#5a9e80" strokeWidth="1.3" strokeDasharray="6 5" fill="none"/>
-              <circle cx="218" cy="34"  r="5.5" fill="#5a9e80"/>
-              <circle cx="38"  cy="222" r="5.5" fill="#5a9e80"/>
-              <path d="M96 72 L140 58 L184 72 L184 128 Q184 170 140 190 Q96 170 96 128 Z" fill="#c8e8d8" stroke="#3d8a62" strokeWidth="2.2"/>
-              <path d="M108 80 L140 68 L172 80 L172 128 Q172 162 140 178 Q108 162 108 128 Z" fill="none" stroke="#5aaa80" strokeWidth="1.2"/>
-              <path d="M126 120 L126 108 Q126 94 140 94 Q154 94 154 108 L154 120" stroke="#3d8a62" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-              <rect x="122" y="118" width="36" height="30" rx="8" fill="#3d8a62"/>
-              <circle cx="140" cy="130" r="5.5" fill="#c8e8d8"/>
-              <rect x="138" y="130" width="4"  height="8"  rx="2" fill="#c8e8d8"/>
-              <rect x="198" y="42"  width="100" height="34" rx="9" fill="#b8deca" stroke="#5a9e80" strokeWidth="1.4"/>
-              <circle cx="214" cy="59" r="3.5" fill="#3d8a62"/>
-              <circle cx="225" cy="59" r="3.5" fill="#3d8a62" opacity="0.55"/>
-              <circle cx="236" cy="59" r="3.5" fill="#3d8a62" opacity="0.3"/>
-              <rect x="260" y="53"  width="28"  height="12" rx="6" fill="#5a9e80" opacity="0.7"/>
-              <rect x="198" y="84"  width="100" height="34" rx="9" fill="#a8d4bc" stroke="#5a9e80" strokeWidth="1.4"/>
-              <circle cx="214" cy="101" r="3.5" fill="#3d8a62"/>
-              <circle cx="225" cy="101" r="3.5" fill="#3d8a62" opacity="0.55"/>
-              <line x1="240" y1="97"  x2="276" y2="97"  stroke="#5a9e80" strokeWidth="2" strokeLinecap="round" opacity="0.6"/>
-              <line x1="240" y1="105" x2="270" y2="105" stroke="#5a9e80" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
-              <rect x="198" y="126" width="100" height="34" rx="9" fill="#b8deca" stroke="#5a9e80" strokeWidth="1.4"/>
-              <circle cx="214" cy="143" r="3.5" fill="#3d8a62"/>
-              <circle cx="225" cy="143" r="3.5" fill="#3d8a62" opacity="0.55"/>
-              <rect x="260" y="137" width="28"  height="12" rx="6" fill="#5a9e80" opacity="0.7"/>
-              <rect x="196" y="176" width="104" height="82" rx="12" fill="white" stroke="#8cc8a8" strokeWidth="1.5"/>
-              <circle cx="215" cy="200" r="9" fill="none" stroke="#3d8a62" strokeWidth="1.8"/>
-              <polyline points="210,200 214,205 222,195" stroke="#3d8a62" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <line x1="230" y1="198" x2="288" y2="198" stroke="#aad4bc" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="230" y1="206" x2="278" y2="206" stroke="#aad4bc" strokeWidth="2.2" strokeLinecap="round"/>
-              <circle cx="215" cy="232" r="9" fill="none" stroke="#3d8a62" strokeWidth="1.8"/>
-              <polyline points="210,232 214,237 222,227" stroke="#3d8a62" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              <line x1="230" y1="230" x2="288" y2="230" stroke="#aad4bc" strokeWidth="2.2" strokeLinecap="round"/>
-              <line x1="230" y1="238" x2="278" y2="238" stroke="#aad4bc" strokeWidth="2.2" strokeLinecap="round"/>
-            </svg>
-          </div>
-        </article>
-
+      {/* dots */}
+      <span className="cq-dot cq-dot-1" aria-hidden="true"></span>
+      <span className="cq-dot cq-dot-2" aria-hidden="true"></span>
+      <span className="cq-dot cq-dot-3" aria-hidden="true"></span>
+      <span className="cq-dot cq-dot-4" aria-hidden="true"></span>
+      {/* text */}
+      <div className="cq-body">
+        <p className="cq-line1">you don't</p>
+        <p className="cq-line2">need <em className="cq-muted">more</em></p>
+        <p className="cq-highlight"><span className="cq-hl-box">COMPLEXITY,</span></p>
+        <p className="cq-line3">you need to</p>
+        <p className="cq-line4">automate</p>
+        <p className="cq-line5">your sales pipeline.</p>
       </div>
     </div>
+
+      <div className="chaos-body" id="chaosStickyBody">
+
+        {/* Sticky 3-col panel — pins while chaos-body scrolls */}
+        <div className="chaos-main">
+
+          {/* HEADING — spans full width */}
+          <div className="chaos-heading-row">
+
+            <h2 className="chaos-title" style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)' }}>
+              Everything you need to <span className="script-accent" spellCheck={false} style={{ fontSize: '1.15em' }}>scale</span>
+            </h2>
+            <p className="chaos-subtitle">Your team deserves better than scattered data and missed follow-ups.</p>
+          </div>
+
+          {/* LEFT — numbered step titles with micro-desc */}
+          <div className="chaos-numbers">
+            <div className="chaos-num-item active" data-step="1">
+              <span className="chaos-num">01</span>
+              <span className="chaos-num-label">Agent Dashboard</span>
+              <span className="chaos-num-micro">Monitor your daily activities,assigned tasks,and overall performance in one place.</span>
+            </div>
+            <div className="chaos-num-item" data-step="2">
+              <span className="chaos-num">02</span>
+              <span className="chaos-num-label">Lead Pipeline</span>
+              <span className="chaos-num-micro">Track leads through every stage, from initial contact to successful conversion.</span>
+            </div>
+            <div className="chaos-num-item" data-step="3">
+              <span className="chaos-num">03</span>
+              <span className="chaos-num-label">Lead Queue</span>
+              <span className="chaos-num-micro">View and manage the latest leads generated across all connected channels.</span>
+            </div>
+            <div className="chaos-num-item" data-step="4">
+              <span className="chaos-num">04</span>
+              <span className="chaos-num-label">Lead Analytics</span>
+              <span className="chaos-num-micro">Analyze lead performance, conversion trends, and source-wise insights</span>
+            </div>
+          </div>
+
+          {/* CENTER — video (scroll only on hover) */}
+          <div className="chaos-visual-wrapper" id="chaosVideoWrapper">
+            <div className="chaos-visual">
+              <video className="chaos-video active" id="chaos-vid-1" src="/video/video1.mp4" autoPlay loop muted playsInline></video>
+              <video className="chaos-video" id="chaos-vid-2" src="/video/video2.mp4" autoPlay loop muted playsInline></video>
+              <video className="chaos-video" id="chaos-vid-3" src="/video/video3.mp4" autoPlay loop muted playsInline></video>
+              <video className="chaos-video" id="chaos-vid-4" src="/video/video4.mp4" autoPlay loop muted playsInline></video>
+            </div>
+            {/* Step indicator dots under video */}
+            <div className="chaos-video-dots">
+              <span className="chaos-dot active" data-step="1"></span>
+              <span className="chaos-dot" data-step="2"></span>
+              <span className="chaos-dot" data-step="3"></span>
+              <span className="chaos-dot" data-step="4"></span>
+            </div>
+          </div>
+
+          {/* RIGHT — description with stat badge */}
+          <div className="chaos-desc-col">
+            <div className="chaos-desc-sticky">
+              <div className="chaos-desc-text active" id="chaos-desc-1">
+                "Manage every task, conversation, and customer interaction from one intelligent workspace. Stay organized with real-time updates, priority reminders, and AI-powered recommendations that help you close more deals with confidence."
+              </div>
+              <div className="chaos-desc-text" id="chaos-desc-2">
+                "Visualize every opportunity from first contact to final conversion. Track lead progress, identify bottlenecks, automate follow-ups, and keep your sales process moving with complete transparency."
+              </div>
+              <div className="chaos-desc-text" id="chaos-desc-3">
+                "Discover your newest customer opportunities in one place. Instantly review incoming leads, prioritize high-value prospects, and respond faster with intelligent lead management tools designed for growing businesses."
+              </div>
+              <div className="chaos-desc-text" id="chaos-desc-4">               
+                "Turn your sales data into actionable insights. Monitor lead performance, analyze conversion trends, compare acquisition channels, and make data-driven decisions that accelerate business growth."
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Sentinel spacers — create 4×100vh scroll distance */}
+        <div className="chaos-sentinels" aria-hidden="true">
+          <div className="chaos-step" data-step="1"></div>
+          <div className="chaos-step" data-step="2"></div>
+          <div className="chaos-step" data-step="3"></div>
+          <div className="chaos-step" data-step="4"></div>
+        </div>
+
+        {/* Wave Divider — chaos → process */}
+        <div className="wave-divider" aria-hidden="true">
+          <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path className="wave-path wave-path-3"
+              d="M0,20 C360,95 720,5 1080,70 C1260,92 1380,45 1440,35 L1440,100 L0,100 Z"/>
+            <path className="wave-path wave-path-1"
+              d="M0,40 C320,8 640,88 960,28 C1120,5 1300,72 1440,55 L1440,100 L0,100 Z"/>
+            <path className="wave-path wave-path-2"
+              d="M0,60 C280,25 560,90 840,45 C1040,15 1260,80 1440,65 L1440,100 L0,100 Z"/>
+          </svg>
+        </div>
+
+      </div>
   </section>
 
   {/*  Interactive Process Section  */}
@@ -774,73 +1050,16 @@ setTimeout(() => {
           </div>
         </div>
 
-        <div className="process-visual-display reveal" id="orbitViz">
-
-          {/*  Central core  */}
-          <div className="orb-core">
-            <div className="orb-pulse"></div>
-            <div className="orb-inner">
-              <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="20" stroke="rgba(42,157,143,0.6)" strokeWidth="1.5"/><polyline points="10,26 17,18 22,22 30,13 38,10" stroke="#2a9d8f" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/><circle cx="22" cy="22" r="3" fill="#1a6b5c"/></svg>
-            </div>
-          </div>
-
-          {/*  SVG orbit lines + animated dot tracers  */}
-          <svg className="orbit-svg" viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/*  Orbit ellipses  */}
-            <ellipse cx="210" cy="190" rx="155" ry="100" stroke="rgba(26,107,92,0.12)" strokeWidth="1.2"/>
-            <ellipse cx="210" cy="190" rx="105" ry="68"  stroke="rgba(26,107,92,0.10)" strokeWidth="1"/>
-            {/*  Tracer dots on outer orbit  */}
-            <circle r="4" fill="#2a9d8f" opacity="0.8">
-              <animateMotion dur="6s" repeatCount="indefinite">
-                <mpath href="#outerOrbit"/>
-              </animateMotion>
-            </circle>
-            <circle r="3" fill="#1a6b5c" opacity="0.5">
-              <animateMotion dur="6s" begin="3s" repeatCount="indefinite">
-                <mpath href="#outerOrbit"/>
-              </animateMotion>
-            </circle>
-            {/*  Tracer on inner orbit  */}
-            <circle r="3.5" fill="#2a9d8f" opacity="0.7">
-              <animateMotion dur="4s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-                <mpath href="#innerOrbit"/>
-              </animateMotion>
-            </circle>
-            {/*  Hidden paths for animateMotion  */}
-            <ellipse id="outerOrbit" cx="210" cy="190" rx="155" ry="100" display="none"/>
-            <ellipse id="innerOrbit" cx="210" cy="190" rx="105" ry="68"  display="none"/>
-            {/*  Connector lines from center to nodes (animated opacity)  */}
-            <line className="orb-line" x1="210" y1="190" x2="72"  y2="112"/>
-            <line className="orb-line" x1="210" y1="190" x2="348" y2="108"/>
-            <line className="orb-line" x1="210" y1="190" x2="58"  y2="268"/>
-            <line className="orb-line" x1="210" y1="190" x2="358" y2="278"/>
-          </svg>
-
-          {/*  Floating data nodes — each unique  */}
-          <div className="orb-node on-tl">
-            <span className="on-icon">📥</span>
-            <span className="on-label">Inbox Synced</span>
-            <div className="on-bar"><div className="on-fill" style={{width: '88%'}}></div></div>
-          </div>
-
-          <div className="orb-node on-tr">
-            <span className="on-icon">⚡</span>
-            <span className="on-label">Data Ingested</span>
-            <div className="on-bar"><div className="on-fill" style={{width: '72%'}}></div></div>
-          </div>
-
-          <div className="orb-node on-bl">
-            <span className="on-icon">📊</span>
-            <span className="on-label">Graph Built</span>
-            <div className="on-bar"><div className="on-fill" style={{width: '95%'}}></div></div>
-          </div>
-
-          <div className="orb-node on-br">
-            <span className="on-icon">✨</span>
-            <span className="on-label">100% Automated</span>
-            <div className="on-bar"><div className="on-fill" style={{width: '100%'}}></div></div>
-          </div>
-
+        <div className="process-visual-display reveal" id="orbitViz" style={{ padding: 0, overflow: 'hidden', minHeight: 'auto', display: 'block' }}>
+          <video 
+            id="processVideo"
+            src="/video/CRM_video_202607241644.mp4"
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'inherit' }}
+          />
         </div>
       </div>
     </div>
