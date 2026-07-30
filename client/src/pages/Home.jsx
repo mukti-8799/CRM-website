@@ -387,81 +387,43 @@ setTimeout(() => {
   }
 
   if (chaosBody && chaosVideos.length > 0) {
-    let currentStep     = 1;
-    let locked          = false;
-    let lockTimer       = null;
-    const LOCK_MS       = 1200;
+    let currentStep = 1;
     setActiveStep(1);
 
     // activate right col on load
     const descCol = document.querySelector('.chaos-desc-col');
     if (descCol) descCol.classList.add('active-desc');
 
-    // ── Scroll-position based trap ──
-    // chaos-body fills 5×100vh (1 sticky + 4 sentinels)
-    // We intercept scroll only while user is inside this zone
-    // and videos haven't all been seen yet
+    // ── Smooth Scroll Progress via GSAP ScrollTrigger ──
+    // Replaced laggy wheel trap with native smooth scroll tracking
+    ScrollTrigger.create({
+      trigger: chaosBody,
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        let newStep = Math.floor(self.progress * chaosTotalSteps) + 1;
+        if (newStep > chaosTotalSteps) newStep = chaosTotalSteps;
+        if (newStep < 1) newStep = 1;
 
-    let isSectionVisible = false;
-
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isSectionVisible = entry.isIntersecting;
-        if (!entry.isIntersecting) {
-          // section left — release trap
-          if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(false);
+        if (newStep !== currentStep) {
+          const dir = newStep > currentStep ? 1 : -1;
+          currentStep = newStep;
+          setActiveStep(currentStep, dir);
         }
-        // reset step when section comes back into view from top
-        if (entry.isIntersecting && entry.boundingClientRect.top > 0) {
-          currentStep = 1;
-          setActiveStep(1, 1);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    sectionObserver.observe(chaosBody);
-
-    window.addEventListener('wheel', (e) => {
-      if (!isSectionVisible) return;
-
-      const dir       = e.deltaY > 0 ? 1 : -1;
-      const atStart   = currentStep === 1               && dir < 0;
-      const atEnd     = currentStep === chaosTotalSteps  && dir > 0;
-
-      // At boundaries — release, let page scroll naturally
-      if (atStart || atEnd) {
-        if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(false);
-        return;
       }
-
-      // Mid sequence — trap scroll, advance video step
-      e.preventDefault();
-      if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(true);
-      if (locked) return;
-
-      const nextStep = currentStep + dir;
-      if (nextStep < 1 || nextStep > chaosTotalSteps) return;
-
-      locked      = true;
-      currentStep = nextStep;
-      setActiveStep(currentStep, dir);
-
-      if (lockTimer) clearTimeout(lockTimer);
-      lockTimer = setTimeout(() => {
-        locked    = false;
-        lockTimer = null;
-      }, LOCK_MS);
-
-    }, { passive: false });
+    });
 
     // ── Dot click navigation ──
     document.querySelectorAll('.chaos-dot').forEach(dot => {
-      dot.addEventListener('click', () => {
-        if (locked) return;
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
         const step = parseInt(dot.getAttribute('data-step'));
-        const dir  = step > currentStep ? 1 : -1;
-        currentStep = step;
-        setActiveStep(step, dir);
+        // Approximate scroll position for smooth jump
+        const targetScroll = chaosBody.offsetTop + ((step - 1) * (chaosBody.offsetHeight / chaosTotalSteps));
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'smooth'
+        });
       });
     });
   }
@@ -589,28 +551,33 @@ setTimeout(() => {
     }
   });
 
-  // ── Parallax on chaos bg blobs ──
-  gsap.to('.chaos-blob-1', {
-    y: -80,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.chaos-section',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 2,
-    }
-  });
 
-  gsap.to('.chaos-blob-2', {
-    y: 80,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.chaos-section',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 3,
-    }
-  });
+  // ── GSAP ScrollTrigger for Accordion Section ──
+  const accordionSection = document.querySelector('.accordion-section');
+  const panels = document.querySelectorAll('.accordion-panel');
+  if (accordionSection && panels.length > 0) {
+    ScrollTrigger.create({
+      trigger: accordionSection,
+      start: 'center center',
+      end: '+=2000',
+      pin: true,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const total = panels.length;
+        let activeIdx = Math.floor(progress * total);
+        if (activeIdx >= total) activeIdx = total - 1;
+        
+        panels.forEach((p, i) => {
+          if (i === activeIdx) {
+            if (!p.classList.contains('active')) p.classList.add('active');
+          } else {
+            if (p.classList.contains('active')) p.classList.remove('active');
+          }
+        });
+      }
+    });
+  }
 
   // ── Stagger reveal for feature bar items ──
   gsap.fromTo('.feature-bar-item',
@@ -821,198 +788,200 @@ setTimeout(() => {
     </div>
   </section>
 
-    {/* Chaos Sticky Video Section */}
-  <section className="chaos-section" id="chaos">
-
-    {/* Decorative background blobs — visible around the section, not behind cards */}
-    <div className="chaos-bg-deco" aria-hidden="true">
-      <div className="chaos-blob chaos-blob-1"></div>
-      <div className="chaos-blob chaos-blob-2"></div>
-      <div className="chaos-blob chaos-blob-3"></div>
-    </div>
-
-    {/* Corner particle decorations — top-left & bottom-right */}
-    <div className="chaos-corner-deco chaos-corner-tl" aria-hidden="true">
-      <svg width="340" height="260" viewBox="0 0 340 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="18" cy="18" r="4" fill="rgba(10,10,10,0.55)"/>
-        <circle cx="90" cy="55" r="3" fill="rgba(10,10,10,0.45)"/>
-        <circle cx="170" cy="30" r="3.5" fill="rgba(10,10,10,0.38)"/>
-        <circle cx="260" cy="90" r="2.5" fill="rgba(10,10,10,0.25)"/>
-        <circle cx="50" cy="130" r="3" fill="rgba(10,10,10,0.32)"/>
-        <circle cx="130" cy="160" r="2.5" fill="rgba(10,10,10,0.2)"/>
-        <circle cx="310" cy="40" r="2" fill="rgba(10,10,10,0.18)"/>
-        <circle cx="200" cy="180" r="2" fill="rgba(10,10,10,0.12)"/>
-        <line x1="18" y1="18" x2="90" y2="55" stroke="rgba(10,10,10,0.35)" strokeWidth="1.2"/>
-        <line x1="90" y1="55" x2="170" y2="30" stroke="rgba(10,10,10,0.28)" strokeWidth="1.1"/>
-        <line x1="170" y1="30" x2="260" y2="90" stroke="rgba(10,10,10,0.2)" strokeWidth="1"/>
-        <line x1="18" y1="18" x2="50" y2="130" stroke="rgba(10,10,10,0.3)" strokeWidth="1.1"/>
-        <line x1="50" y1="130" x2="130" y2="160" stroke="rgba(10,10,10,0.18)" strokeWidth="1"/>
-        <line x1="90" y1="55" x2="50" y2="130" stroke="rgba(10,10,10,0.22)" strokeWidth="1"/>
-        <line x1="170" y1="30" x2="310" y2="40" stroke="rgba(10,10,10,0.15)" strokeWidth="1"/>
-        <line x1="260" y1="90" x2="200" y2="180" stroke="rgba(10,10,10,0.1)" strokeWidth="1"/>
-        <line x1="130" y1="160" x2="200" y2="180" stroke="rgba(10,10,10,0.08)" strokeWidth="1"/>
-        <circle cx="18" cy="18" r="1.8" fill="rgba(255,255,255,0.7)"/>
-        <circle cx="90" cy="55" r="1.4" fill="rgba(255,255,255,0.6)"/>
-        <circle cx="170" cy="30" r="1.5" fill="rgba(255,255,255,0.5)"/>
-        <circle cx="50" cy="130" r="1.3" fill="rgba(255,255,255,0.45)"/>
-        <circle cx="260" cy="90" r="1.2" fill="rgba(255,255,255,0.3)"/>
-      </svg>
-    </div>
-
-    <div className="chaos-corner-deco chaos-corner-br" aria-hidden="true">
-      <svg width="340" height="260" viewBox="0 0 340 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="322" cy="242" r="4" fill="rgba(10,10,10,0.55)"/>
-        <circle cx="250" cy="205" r="3" fill="rgba(10,10,10,0.45)"/>
-        <circle cx="170" cy="230" r="3.5" fill="rgba(10,10,10,0.38)"/>
-        <circle cx="80" cy="170" r="2.5" fill="rgba(10,10,10,0.25)"/>
-        <circle cx="290" cy="130" r="3" fill="rgba(10,10,10,0.32)"/>
-        <circle cx="210" cy="100" r="2.5" fill="rgba(10,10,10,0.2)"/>
-        <circle cx="30" cy="220" r="2" fill="rgba(10,10,10,0.18)"/>
-        <circle cx="140" cy="80" r="2" fill="rgba(10,10,10,0.12)"/>
-        <line x1="322" y1="242" x2="250" y2="205" stroke="rgba(10,10,10,0.35)" strokeWidth="1.2"/>
-        <line x1="250" y1="205" x2="170" y2="230" stroke="rgba(10,10,10,0.28)" strokeWidth="1.1"/>
-        <line x1="170" y1="230" x2="80" y2="170" stroke="rgba(10,10,10,0.2)" strokeWidth="1"/>
-        <line x1="322" y1="242" x2="290" y2="130" stroke="rgba(10,10,10,0.3)" strokeWidth="1.1"/>
-        <line x1="290" y1="130" x2="210" y2="100" stroke="rgba(10,10,10,0.18)" strokeWidth="1"/>
-        <line x1="250" y1="205" x2="290" y2="130" stroke="rgba(10,10,10,0.22)" strokeWidth="1"/>
-        <line x1="170" y1="230" x2="30" y2="220" stroke="rgba(10,10,10,0.15)" strokeWidth="1"/>
-        <line x1="80" y1="170" x2="140" y2="80" stroke="rgba(10,10,10,0.1)" strokeWidth="1"/>
-        <line x1="210" y1="100" x2="140" y2="80" stroke="rgba(10,10,10,0.08)" strokeWidth="1"/>
-        <circle cx="322" cy="242" r="1.8" fill="rgba(255,255,255,0.7)"/>
-        <circle cx="250" cy="205" r="1.4" fill="rgba(255,255,255,0.6)"/>
-        <circle cx="170" cy="230" r="1.5" fill="rgba(255,255,255,0.5)"/>
-        <circle cx="290" cy="130" r="1.3" fill="rgba(255,255,255,0.45)"/>
-        <circle cx="80" cy="170" r="1.2" fill="rgba(255,255,255,0.3)"/>
-      </svg>
-    </div>
-
-    {/* Quote — top-right corner, no card, exact pic style */}
-    <div className="chaos-quote-card" aria-label="Quote">
-      {/* animated brush stroke bars */}
-      <div className="cq-grid" aria-hidden="true">
-        <span className="cq-bar" style={{'--c':'rgba(180,200,195,0.35)', '--h':'78%', '--d':'0s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(200,185,155,0.28)', '--h':'92%', '--d':'0.2s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(190,175,210,0.3)', '--h':'65%', '--d':'0.4s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(42,157,143,0.2)', '--h':'85%', '--d':'0.6s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(220,180,170,0.32)', '--h':'70%', '--d':'0.8s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(155,185,195,0.28)', '--h':'88%', '--d':'1.0s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(175,160,140,0.25)', '--h':'60%', '--d':'1.2s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(26,107,92,0.15)', '--h':'95%', '--d':'1.4s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(210,190,175,0.3)', '--h':'72%', '--d':'1.6s'}}></span>
-        <span className="cq-bar" style={{'--c':'rgba(160,185,175,0.25)', '--h':'82%', '--d':'1.8s'}}></span>
+    {/* Format Video Section replacing Accordion */}
+    <style dangerouslySetInnerHTML={{__html: `
+      .format-accordion-wrapper {
+        display: flex;
+        width: 100%;
+        height: 65vh;
+        min-height: 500px;
+        max-height: 700px;
+        background: #111;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        margin-top: 1rem;
+      }
+      
+      .format-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 2rem;
+        transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        cursor: pointer;
+        border-right: 2px solid #000;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .format-panel:last-child {
+        border-right: none;
+      }
+      
+      .format-panel.active {
+        flex: 4;
+      }
+      
+      .format-panel-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.5s ease;
+        white-space: nowrap;
+      }
+      
+      .format-panel.active .format-panel-top {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.2s;
+      }
+      
+      .format-panel-num {
+        font-family: 'Outfit', sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        line-height: 0.8;
+        letter-spacing: -2px;
+      }
+      
+      .format-panel-desc {
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        max-width: 160px;
+        white-space: normal;
+        line-height: 1.3;
+      }
+      
+      .format-panel-video-wrapper {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 0;
+        position: relative;
+        min-height: 0;
+      }
+      
+      .format-panel-video {
+        width: 100%;
+        height: 100%;
+        max-height: 250px;
+        object-fit: cover;
+        transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        filter: grayscale(100%);
+        border-radius: 8px;
+        opacity: 0.4;
+      }
+      
+      .format-panel.active .format-panel-video {
+        filter: grayscale(0%);
+        max-height: 350px;
+        opacity: 1;
+      }
+      
+      .format-panel-bottom {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        height: 80px;
+      }
+      
+      .format-panel-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(2.5rem, 4.5vw, 5.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        line-height: 0.75;
+        margin: 0;
+        white-space: nowrap;
+        letter-spacing: -0.02em;
+        transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      
+      .format-panel:not(.active) .format-panel-title {
+        font-size: 2rem;
+        opacity: 0.6;
+      }
+      
+      .fp-1 { background: #e5e7eb; color: #111; }
+      .fp-2 { background: #111827; color: #f3f4f6; }
+      .fp-3 { background: #fbcfe8; color: #111; }
+      .fp-4 { background: #2a9d8f; color: #f3f4f6; }
+    `}} />
+  <section className="format-section" id="chaos">
+    <div className="container format-container">
+      <div className="accordion-heading-row" style={{marginBottom: '2rem'}}>
+        <h2 className="chaos-title" style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)' }}>
+          Everything you need to <span className="script-accent" spellCheck={false} style={{ fontSize: '1.15em' }}>scale</span>
+        </h2>
+        <p className="chaos-subtitle">Your team deserves better than scattered data and missed follow-ups.</p>
       </div>
-      {/* dots */}
-      <span className="cq-dot cq-dot-1" aria-hidden="true"></span>
-      <span className="cq-dot cq-dot-2" aria-hidden="true"></span>
-      <span className="cq-dot cq-dot-3" aria-hidden="true"></span>
-      <span className="cq-dot cq-dot-4" aria-hidden="true"></span>
-      {/* text */}
-      <div className="cq-body">
-        <p className="cq-line1">you don't</p>
-        <p className="cq-line2">need <em className="cq-muted">more</em></p>
-        <p className="cq-highlight"><span className="cq-hl-box">COMPLEXITY,</span></p>
-        <p className="cq-line3">you need to</p>
-        <p className="cq-line4">automate</p>
-        <p className="cq-line5">your sales pipeline.</p>
-      </div>
-    </div>
 
-      <div className="chaos-body" id="chaosStickyBody">
-
-        {/* Sticky 3-col panel — pins while chaos-body scrolls */}
-        <div className="chaos-main">
-
-          {/* HEADING — spans full width */}
-          <div className="chaos-heading-row">
-
-            <h2 className="chaos-title" style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)' }}>
-              Everything you need to <span className="script-accent" spellCheck={false} style={{ fontSize: '1.15em' }}>scale</span>
-            </h2>
-            <p className="chaos-subtitle">Your team deserves better than scattered data and missed follow-ups.</p>
+      <div className="format-accordion-wrapper">
+        
+        {/* Panel 1 */}
+        <div className="format-panel fp-1 active" onMouseEnter={(e) => { document.querySelectorAll('.format-panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); }}>
+          <div className="format-panel-top">
+            <div className="format-panel-num">00-1</div>
+            <div className="format-panel-desc">Monitor your daily activities</div>
           </div>
-
-          {/* LEFT — numbered step titles with micro-desc */}
-          <div className="chaos-numbers">
-            <div className="chaos-num-item active" data-step="1">
-              <span className="chaos-num">01</span>
-              <span className="chaos-num-label">Agent Dashboard</span>
-              <span className="chaos-num-micro">Monitor your daily activities,assigned tasks,and overall performance in one place.</span>
-            </div>
-            <div className="chaos-num-item" data-step="2">
-              <span className="chaos-num">02</span>
-              <span className="chaos-num-label">Lead Pipeline</span>
-              <span className="chaos-num-micro">Track leads through every stage, from initial contact to successful conversion.</span>
-            </div>
-            <div className="chaos-num-item" data-step="3">
-              <span className="chaos-num">03</span>
-              <span className="chaos-num-label">Lead Queue</span>
-              <span className="chaos-num-micro">View and manage the latest leads generated across all connected channels.</span>
-            </div>
-            <div className="chaos-num-item" data-step="4">
-              <span className="chaos-num">04</span>
-              <span className="chaos-num-label">Lead Analytics</span>
-              <span className="chaos-num-micro">Analyze lead performance, conversion trends, and source-wise insights</span>
-            </div>
+          <div className="format-panel-video-wrapper">
+            <video className="format-panel-video" src="/video/video1.mp4" autoPlay loop muted playsInline></video>
           </div>
-
-          {/* CENTER — video (scroll only on hover) */}
-          <div className="chaos-visual-wrapper" id="chaosVideoWrapper">
-            <div className="chaos-visual">
-              <video className="chaos-video active" id="chaos-vid-1" src="/video/video1.mp4" autoPlay loop muted playsInline></video>
-              <video className="chaos-video" id="chaos-vid-2" src="/video/video2.mp4" autoPlay loop muted playsInline></video>
-              <video className="chaos-video" id="chaos-vid-3" src="/video/video3.mp4" autoPlay loop muted playsInline></video>
-              <video className="chaos-video" id="chaos-vid-4" src="/video/video4.mp4" autoPlay loop muted playsInline></video>
-            </div>
-            {/* Step indicator dots under video */}
-            <div className="chaos-video-dots">
-              <span className="chaos-dot active" data-step="1"></span>
-              <span className="chaos-dot" data-step="2"></span>
-              <span className="chaos-dot" data-step="3"></span>
-              <span className="chaos-dot" data-step="4"></span>
-            </div>
+          <div className="format-panel-bottom">
+            <h3 className="format-panel-title">AGENT DASHBOARD</h3>
           </div>
-
-          {/* RIGHT — description with stat badge */}
-          <div className="chaos-desc-col">
-            <div className="chaos-desc-sticky">
-              <div className="chaos-desc-text active" id="chaos-desc-1">
-                "Manage every task, conversation, and customer interaction from one intelligent workspace. Stay organized with real-time updates, priority reminders, and AI-powered recommendations that help you close more deals with confidence."
-              </div>
-              <div className="chaos-desc-text" id="chaos-desc-2">
-                "Visualize every opportunity from first contact to final conversion. Track lead progress, identify bottlenecks, automate follow-ups, and keep your sales process moving with complete transparency."
-              </div>
-              <div className="chaos-desc-text" id="chaos-desc-3">
-                "Discover your newest customer opportunities in one place. Instantly review incoming leads, prioritize high-value prospects, and respond faster with intelligent lead management tools designed for growing businesses."
-              </div>
-              <div className="chaos-desc-text" id="chaos-desc-4">               
-                "Turn your sales data into actionable insights. Monitor lead performance, analyze conversion trends, compare acquisition channels, and make data-driven decisions that accelerate business growth."
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        {/* Sentinel spacers — create 4×100vh scroll distance */}
-        <div className="chaos-sentinels" aria-hidden="true">
-          <div className="chaos-step" data-step="1"></div>
-          <div className="chaos-step" data-step="2"></div>
-          <div className="chaos-step" data-step="3"></div>
-          <div className="chaos-step" data-step="4"></div>
+        {/* Panel 2 */}
+        <div className="format-panel fp-2" onMouseEnter={(e) => { document.querySelectorAll('.format-panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); }}>
+          <div className="format-panel-top">
+            <div className="format-panel-num">00-2</div>
+            <div className="format-panel-desc">Track leads through every stage</div>
+          </div>
+          <div className="format-panel-video-wrapper">
+            <video className="format-panel-video" src="/video/video2.mp4" autoPlay loop muted playsInline></video>
+          </div>
+          <div className="format-panel-bottom">
+            <h3 className="format-panel-title">LEAD PIPELINE</h3>
+          </div>
         </div>
 
-        {/* Wave Divider — chaos → process */}
-        <div className="wave-divider" aria-hidden="true">
-          <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path className="wave-path wave-path-3"
-              d="M0,20 C360,95 720,5 1080,70 C1260,92 1380,45 1440,35 L1440,100 L0,100 Z"/>
-            <path className="wave-path wave-path-1"
-              d="M0,40 C320,8 640,88 960,28 C1120,5 1300,72 1440,55 L1440,100 L0,100 Z"/>
-            <path className="wave-path wave-path-2"
-              d="M0,60 C280,25 560,90 840,45 C1040,15 1260,80 1440,65 L1440,100 L0,100 Z"/>
-          </svg>
+        {/* Panel 3 */}
+        <div className="format-panel fp-3" onMouseEnter={(e) => { document.querySelectorAll('.format-panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); }}>
+          <div className="format-panel-top">
+            <div className="format-panel-num">00-3</div>
+            <div className="format-panel-desc">View and manage the latest leads</div>
+          </div>
+          <div className="format-panel-video-wrapper">
+            <video className="format-panel-video" src="/video/video3.mp4" autoPlay loop muted playsInline></video>
+          </div>
+          <div className="format-panel-bottom">
+            <h3 className="format-panel-title">LEAD QUEUE</h3>
+          </div>
+        </div>
+
+        {/* Panel 4 */}
+        <div className="format-panel fp-4" onMouseEnter={(e) => { document.querySelectorAll('.format-panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); }}>
+          <div className="format-panel-top">
+            <div className="format-panel-num">00-4</div>
+            <div className="format-panel-desc">Analyze lead performance & trends</div>
+          </div>
+          <div className="format-panel-video-wrapper">
+            <video className="format-panel-video" src="/video/video4.mp4" autoPlay loop muted playsInline></video>
+          </div>
+          <div className="format-panel-bottom">
+            <h3 className="format-panel-title">LEAD ANALYTICS</h3>
+          </div>
         </div>
 
       </div>
+    </div>
   </section>
 
   {/*  Interactive Process Section  */}

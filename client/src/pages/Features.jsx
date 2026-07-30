@@ -41,12 +41,15 @@ setTimeout(() => {
   }, { rootMargin: `-${stickyH}px 0px -55% 0px` });
   sections.forEach(s => secObs.observe(s));
 
-  // Smooth scroll for pills
+  // Smooth scroll for pills — use global Lenis if available
   pills.forEach(pill => {
     pill.addEventListener('click', e => {
       e.preventDefault();
       const target = document.querySelector(pill.getAttribute('href'));
-      if (target) {
+      if (!target) return;
+      if (window.__lenis) {
+        window.__lenis.scrollTo(target, { offset: -stickyH, duration: 1.0 });
+      } else {
         const top = target.getBoundingClientRect().top + window.scrollY - stickyH;
         window.scrollTo({ top, behavior: 'smooth' });
       }
