@@ -636,9 +636,9 @@ const Home = () => {
           <div className="hero-grid">
 
             {/*  Left Hero Column  */}
-            <div className="hero-left-content reveal" style={{ paddingLeft: '12rem' }}>
+            <div className="hero-left-content reveal" style={{ paddingLeft: '0', marginLeft: '-14rem' }}>
               <div className="hero-badge-pill">
-                <span className="badge-tag">NEW â†—</span>
+                <span className="badge-tag">NEW ↗</span>
                 <span>Error Infotech 2.0 is now live</span>
               </div>
 
@@ -659,7 +659,7 @@ const Home = () => {
               </p>
 
               <div className="hero-cta-group">
-                <button className="btn-primary btn-lg" onClick="showToast('Initiating pipeline builder...')">
+                <button className="btn-primary btn-lg" onClick={() => window.location.href = 'https://active.crm.errorinfotech.in/'}>
                   <span>Start Building Pipeline</span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </button>
@@ -670,7 +670,7 @@ const Home = () => {
               </div>
 
               {/*  Handwritten Paper Note Artifact  */}
-              <div className="paper-note-card" style={{ transform: 'scale(1.15) rotate(-2deg)', marginTop: '1rem' }}>
+              <div className="paper-note-card">
                 <span>REAL INSIGHTS.</span>
                 <span>REAL GROWTH.</span>
                 <span>REAL RESULTS.</span>
@@ -678,7 +678,7 @@ const Home = () => {
             </div>
 
             {/*  Right Hero Visual Monitor Frame  */}
-            <div className="hero-visual-container reveal" style={{ maxWidth: '850px', alignSelf: 'flex-start', marginTop: '62px' }}>
+            <div className="hero-visual-container reveal">
               <div className="monitor-frame">
                 <div className="monitor-header">
                   <div className="window-dots">
@@ -687,9 +687,9 @@ const Home = () => {
                     <div className="dot dot-green"></div>
                   </div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>Error Infotech Dashboard</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sarah Chen â–¾</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sarah Chen ▾</div>
                 </div>
-                <div style={{ padding: '0', display: 'flex', height: 'clamp(450px, 65vw, 670px)', pointerEvents: 'none', userSelect: 'none' }}>
+                <div style={{ padding: '0', display: 'flex', height: '614px', pointerEvents: 'none', userSelect: 'none' }}>
                   <LiveDashboardPreview />
                 </div>
               </div>
@@ -1547,7 +1547,7 @@ const Home = () => {
               </p>
 
               <div className="hero-cta-group">
-                <button className="btn-primary btn-lg" onClick={() => window.showToast && window.showToast('Exploring ERP Modules...')}>
+                <button className="btn-primary btn-lg" onClick={() => window.location.href = 'https://active.erp.errorinfotech.in/'}>
                   <span>Explore ERP Modules</span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </button>
@@ -1627,26 +1627,54 @@ const Home = () => {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>ERP Dashboard</div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Admin ▾</div>
                   </div>
-                  <div style={{ padding: '0', display: 'block', height: 'clamp(450px, 65vw, 670px)', overflowY: 'hidden', overflowX: 'hidden', position: 'relative' }}>
+                  <div style={{ padding: '0', display: 'block', height: 'clamp(450px, 65vw, 670px)', overflow: 'hidden', position: 'relative' }}>
+                    
+                    {/* Right Side: Main Dashboard (Scrollable via wrapper, Non-interactive) */}
+                    <div className="custom-scroll" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+                      <div style={{ width: '100%', height: 'calc(1600px * 0.8695)' }}></div>
+                      <iframe
+                        src="https://active.erp.errorinfotech.in"
+                        title="ERP Dashboard Main Content"
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '115%',
+                          height: '1600px',
+                          transform: 'scale(0.8695) translateZ(0)',
+                          transformOrigin: 'top left',
+                          border: 'none',
+                          pointerEvents: 'none',
+                          WebkitOverflowScrolling: 'touch',
+                          willChange: 'transform',
+                          backfaceVisibility: 'hidden',
+                          filter: 'blur(0)'
+                        }}
+                      />
+                    </div>
 
-                    <iframe
-                      src="https://active.erp.errorinfotech.in"
-                      title="ERP Dashboard Preview"
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '115%',
-                        height: '115%',
-                        transform: 'scale(0.8695) translateZ(0)',
-                        transformOrigin: 'top left',
-                        border: 'none',
-                        WebkitOverflowScrolling: 'touch',
-                        willChange: 'transform',
-                        backfaceVisibility: 'hidden',
-                        filter: 'blur(0)'
-                      }}
-                    />
+                    {/* Left Side: Sidebar (Interactive, Native scroll, Clipped to left 230px) */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', clipPath: 'inset(0 calc(100% - 230px) 0 0)', pointerEvents: 'auto' }}>
+                      <iframe
+                        src="https://active.erp.errorinfotech.in"
+                        title="ERP Dashboard Sidebar"
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '115%',
+                          height: '115%',
+                          transform: 'scale(0.8695) translateZ(0)',
+                          transformOrigin: 'top left',
+                          border: 'none',
+                          WebkitOverflowScrolling: 'touch',
+                          willChange: 'transform',
+                          backfaceVisibility: 'hidden',
+                          filter: 'blur(0)'
+                        }}
+                      />
+                    </div>
+
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-/* Premium Senior Product Designer NexaCRM Stylesheet */
+﻿/* Premium Senior Product Designer NexaCRM Stylesheet */
 
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
@@ -397,8 +397,8 @@ a { color: inherit; text-decoration: none; }
 /* Hero Right Monitor Visual */
 .hero-visual-container {
     position: relative;
-    width: 100%;
-    max-width: 100%;
+    width: 80%;
+    max-width: 90%;
     margin: 0 auto;
     filter: drop-shadow(0 25px 50px rgba(0,0,0,0.15));
     animation: monitorSlideIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
@@ -2878,39 +2878,9 @@ a { color: inherit; text-decoration: none; }
   .lm-card { padding: 2.2rem 1.5rem 1.5rem; margin: 1rem; border-radius: 22px; }
 }
 
-/* ── Hero monitor frame — larger size matching red rectangle ── */
-.hero-visual-container {
-  width: 100%;
-  max-width: 100% !important;
-}
-
-.monitor-frame {
-  min-height: 600px;
-  width: 100%;
-}
-
-.monitor-body {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.hero-grid {
-  grid-template-columns: 0.8fr 1.2fr !important;
-  gap: 1.5rem !important;
-}
-
-/* ── Push BUILT FOR Sales content to the red line position ── */
-.hero-section .container {
-  padding-left: 0 !important;
-  max-width: 100% !important;
-  padding-right: 5rem !important;
-}
-
-.hero-left-content {
-  padding-left: 0;
-  margin-left: 2rem;
+/* ── Hero monitor frame ── */
+.hero-visual-container .monitor-frame {
+  transform-origin: top left;
 }
 
 .dashboard-grid {
