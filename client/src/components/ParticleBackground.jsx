@@ -29,7 +29,7 @@ const ParticleBackground = () => {
     /* ── Config ─────────────────────────────────────────── */
     const STRIP_WIDTH  = 200;
     const LINE_DIST    = 160;
-    const DOT_COUNT    = 68;
+    const DOT_COUNT    = 75;
     const SPEED        = 0.28;
     const FADE_ZONE    = 0.28;
 
