@@ -732,40 +732,35 @@ const Home = () => {
         </div>
       </section>
 
-      {/*  4-Column Feature Highlight Bar  */}
+      {/*  3-Column Feature Highlight Bar  */}
       <section className="feature-bar-section">
         <div className="container">
-          <div className="feature-bar-grid">
+          <div className="feature-bar-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
 
-            <div className="feature-bar-item">
-              <div className="bar-icon">ðŸ‘¥</div>
-              <div>
-                <div className="bar-title">360Â° CUSTOMER VIEW</div>
-                <div className="bar-desc">See every interaction, every time â€” all in one place.</div>
+            <div className="feature-bar-item" style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: '0.2rem' }}>
+              <div className="bar-title" style={{ fontSize: '3rem', fontWeight: '900', color: '#0d1b2a', letterSpacing: '-1px' }}>
+                2-4<span style={{ color: '#56667e' }}>wks</span>
+              </div>
+              <div className="bar-desc" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '800', fontSize: '0.85rem', color: '#56667e' }}>
+                AVERAGE DELIVERY
               </div>
             </div>
 
-            <div className="feature-bar-item">
-              <div className="bar-icon">ðŸŒªï¸</div>
-              <div>
-                <div className="bar-title">SMART PIPELINES</div>
-                <div className="bar-desc">Focus on the right deals and move them forward.</div>
+            <div className="feature-bar-item" style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: '0.2rem' }}>
+              <div className="bar-title" style={{ fontSize: '3rem', fontWeight: '900', color: '#0d1b2a', letterSpacing: '-1px' }}>
+                100%
+              </div>
+              <div className="bar-desc" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '800', fontSize: '0.85rem', color: '#56667e' }}>
+                SUCCESS RATE
               </div>
             </div>
 
-            <div className="feature-bar-item">
-              <div className="bar-icon">ðŸ“ˆ</div>
-              <div>
-                <div className="bar-title">REAL-TIME INSIGHTS</div>
-                <div className="bar-desc">Dashboards that help you decide, not guess.</div>
+            <div className="feature-bar-item" style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: '0.2rem' }}>
+              <div className="bar-title" style={{ fontSize: '3rem', fontWeight: '900', color: '#0d1b2a', letterSpacing: '-1px' }}>
+                24/7
               </div>
-            </div>
-
-            <div className="feature-bar-item">
-              <div className="bar-icon">ðŸ”’</div>
-              <div>
-                <div className="bar-title">SECURE & RELIABLE</div>
-                <div className="bar-desc">Your data is safe with enterprise-grade security.</div>
+              <div className="bar-desc" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontWeight: '800', fontSize: '0.85rem', color: '#56667e' }}>
+                EXPERT SUPPORT
               </div>
             </div>
 
