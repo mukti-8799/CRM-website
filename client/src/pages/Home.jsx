@@ -373,19 +373,19 @@ const Home = () => {
     });
 
     // â”€â”€ Testimonial cards: replay animation every time they enter viewport â”€â”€
-        // -- ERP Showcase scroll-in animation --
+    // -- ERP Showcase scroll-in animation --
     (function erpShowcaseAnim() {
       var observed = false;
-      var obs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
           if (entry.isIntersecting && !observed) {
             observed = true;
             var lCol = document.getElementById('erpL');
             var rCol = document.getElementById('erpR');
             if (lCol) lCol.classList.add('ei');
-            setTimeout(function() { if (rCol) rCol.classList.add('ei'); }, 150);
-            ['erpHa','erpHb','erpHc'].forEach(function(id, i) {
-              setTimeout(function() {
+            setTimeout(function () { if (rCol) rCol.classList.add('ei'); }, 150);
+            ['erpHa', 'erpHb', 'erpHc'].forEach(function (id, i) {
+              setTimeout(function () {
                 var el = document.getElementById(id);
                 if (el) el.classList.add('hin');
               }, 600 + i * 180);
@@ -396,7 +396,7 @@ const Home = () => {
       var sec = document.getElementById('erp-showcase');
       if (sec) obs.observe(sec);
     }());
-(function vcardReplayObserver() {
+    (function vcardReplayObserver() {
       const vcards = document.querySelectorAll('.vcard-grid .vcard');
       if (!vcards.length) return;
 
@@ -678,7 +678,7 @@ const Home = () => {
             </div>
 
             {/*  Right Hero Visual Monitor Frame  */}
-            <div className="hero-visual-container reveal" style={{ maxWidth: '1050px', alignSelf: 'flex-start', marginTop: '62px' }}>
+            <div className="hero-visual-container reveal" style={{ maxWidth: '850px', alignSelf: 'flex-start', marginTop: '62px' }}>
               <div className="monitor-frame">
                 <div className="monitor-header">
                   <div className="window-dots">
@@ -689,7 +689,7 @@ const Home = () => {
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>Error Infotech Dashboard</div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sarah Chen â–¾</div>
                 </div>
-                <div style={{ padding: '0', display: 'flex', height: 'clamp(450px, 65vw, 670px)' }}>
+                <div style={{ padding: '0', display: 'flex', height: 'clamp(450px, 65vw, 670px)', pointerEvents: 'none', userSelect: 'none' }}>
                   <LiveDashboardPreview />
                 </div>
               </div>
@@ -1357,7 +1357,8 @@ const Home = () => {
       </section>
 
       {/*  ═══ ERP DASHBOARD SHOWCASE ═══  */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .erp-sec {
           padding: 7rem 0 5rem;
           background:
@@ -1574,33 +1575,33 @@ const Home = () => {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {[
-                    "https://i.pravatar.cc/100?img=11", 
-                    "https://i.pravatar.cc/100?img=47", 
+                    "https://i.pravatar.cc/100?img=11",
+                    "https://i.pravatar.cc/100?img=47",
                     "https://i.pravatar.cc/100?img=12"
                   ].map((src, i) => (
-                    <img 
+                    <img
                       key={i}
-                      src={src} 
+                      src={src}
                       alt="User avatar"
                       style={{
-                        width: '32px', 
-                        height: '32px', 
-                        borderRadius: '50%', 
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
                         border: '2px solid white',
                         marginLeft: i === 0 ? '0' : '-12px',
                         zIndex: 3 - i,
                         boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                      }} 
+                      }}
                     />
                   ))}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                    <span style={{ 
-                      width: '6px', 
-                      height: '6px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#10b981', 
+                    <span style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      backgroundColor: '#10b981',
                       boxShadow: '0 0 8px #10b981',
                     }}></span>
                     <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#1a6b5c', letterSpacing: '0.05em' }}>
@@ -1632,16 +1633,16 @@ const Home = () => {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Admin ▾</div>
                   </div>
                   <div style={{ padding: '0', display: 'block', height: 'clamp(450px, 65vw, 670px)', overflowY: 'hidden', overflowX: 'hidden', position: 'relative' }}>
-                    
-                    <iframe 
-                      src="https://active.erp.errorinfotech.in" 
+
+                    <iframe
+                      src="https://active.erp.errorinfotech.in"
                       title="ERP Dashboard Preview"
-                      style={{ 
+                      style={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
-                        width: '115%', 
-                        height: '115%', 
+                        width: '115%',
+                        height: '115%',
                         transform: 'scale(0.8695) translateZ(0)',
                         transformOrigin: 'top left',
                         border: 'none',
@@ -1671,8 +1672,8 @@ const Home = () => {
         </div>
 
         <div className="marquee-container">
-            <div className="marquee-track">
-              <div className="marquee-group">
+          <div className="marquee-track">
+            <div className="marquee-group">
               {/* Card 1 */}
               <div className="vcard">
                 <div className="vcard-spiral" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="sp-ring sp-r1" d="M60,60 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" stroke="#1a6b5c" strokeWidth="1.2" fill="none" strokeDasharray="314" strokeDashoffset="314" /><path className="sp-ring sp-r2" d="M60,60 m-36,0 a36,36 0 1,1 72,0 a36,36 0 1,1 -72,0" stroke="#2a9d8f" strokeWidth="1" fill="none" strokeDasharray="226" strokeDashoffset="226" /><path className="sp-ring sp-r3" d="M60,60 m-22,0 a22,22 0 1,1 44,0 a22,22 0 1,1 -44,0" stroke="#1a6b5c" strokeWidth="0.9" fill="none" strokeDasharray="138" strokeDashoffset="138" /></svg></div>
@@ -1728,10 +1729,10 @@ const Home = () => {
                 <p className="vcard-desc">"The best part is how it integrates our data sources. I no longer switch between five different tabs to understand my accounts. Everything I need is right there."</p>
               </div>
 
-              </div>
-              
-              {/* DUPLICATE SET FOR SEAMLESS LOOP */}
-              <div className="marquee-group" aria-hidden="true">
+            </div>
+
+            {/* DUPLICATE SET FOR SEAMLESS LOOP */}
+            <div className="marquee-group" aria-hidden="true">
               {/* Card 1 */}
               <div className="vcard">
                 <div className="vcard-spiral" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="sp-ring sp-r1" d="M60,60 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" stroke="#1a6b5c" strokeWidth="1.2" fill="none" strokeDasharray="314" strokeDashoffset="314" /><path className="sp-ring sp-r2" d="M60,60 m-36,0 a36,36 0 1,1 72,0 a36,36 0 1,1 -72,0" stroke="#2a9d8f" strokeWidth="1" fill="none" strokeDasharray="226" strokeDashoffset="226" /><path className="sp-ring sp-r3" d="M60,60 m-22,0 a22,22 0 1,1 44,0 a22,22 0 1,1 -44,0" stroke="#1a6b5c" strokeWidth="0.9" fill="none" strokeDasharray="138" strokeDashoffset="138" /></svg></div>
@@ -1786,10 +1787,10 @@ const Home = () => {
                 <p className="vcard-role">Enterprise AE, Innovate Inc</p>
                 <p className="vcard-desc">"The best part is how it integrates our data sources. I no longer switch between five different tabs to understand my accounts. Everything I need is right there."</p>
               </div>
-              </div>
+            </div>
 
-              {/* 3rd DUPLICATE SET FOR ULTRA-WIDE SCREENS */}
-              <div className="marquee-group" aria-hidden="true">
+            {/* 3rd DUPLICATE SET FOR ULTRA-WIDE SCREENS */}
+            <div className="marquee-group" aria-hidden="true">
               {/* Card 1 */}
               <div className="vcard">
                 <div className="vcard-spiral" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path className="sp-ring sp-r1" d="M60,60 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0" stroke="#1a6b5c" strokeWidth="1.2" fill="none" strokeDasharray="314" strokeDashoffset="314" /><path className="sp-ring sp-r2" d="M60,60 m-36,0 a36,36 0 1,1 72,0 a36,36 0 1,1 -72,0" stroke="#2a9d8f" strokeWidth="1" fill="none" strokeDasharray="226" strokeDashoffset="226" /><path className="sp-ring sp-r3" d="M60,60 m-22,0 a22,22 0 1,1 44,0 a22,22 0 1,1 -44,0" stroke="#1a6b5c" strokeWidth="0.9" fill="none" strokeDasharray="138" strokeDashoffset="138" /></svg></div>
@@ -1843,25 +1844,83 @@ const Home = () => {
                 <h3 className="vcard-title">Jessica Patel</h3>
                 <p className="vcard-role">Enterprise AE, Innovate Inc</p>
                 <p className="vcard-desc">"The best part is how it integrates our data sources. I no longer switch between five different tabs to understand my accounts. Everything I need is right there."</p>
-              </div>
               </div>
             </div>
           </div>
+        </div>
       </section>
 
 
 
 
-      {/*  CTA Banner  */}
+      {/*  CTA Banner — Let's Build Something Great Together  */}
       <section className="cta-section">
         <div className="container">
-          <div className="cta-banner reveal">
-            <h2 className="cta-title">Ready to accelerate your revenue?</h2>
-            <p className="cta-subtitle">Join thousands of high-performing sales teams who have already made the switch. Set up takes less than 5 minutes.</p>
-            <button className="btn-primary btn-lg btn-white" onClick="showToast('Initiating free trial setup...')">
-              <span>Start Your Free Trial â†’</span>
+          <div className="cta-banner-v2 reveal">
+
+            {/* Decorative blobs */}
+            <div className="cta-blob cta-blob-left"></div>
+            <div className="cta-blob cta-blob-right"></div>
+
+            {/* Top label pill */}
+            <div className="cta-label-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Let's Work Together</span>
+            </div>
+
+            {/* Secure badge top-right */}
+            <div className="cta-secure-badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>100% Secure<br />&amp; Private</span>
+            </div>
+
+            {/* Main heading */}
+            <h2 className="cta-v2-title">
+              Let's Build Something<br />
+              Great <span className="cta-v2-accent">Together!</span>
+            </h2>
+
+            {/* Subtitle */}
+            <p className="cta-v2-subtitle">
+              Tell us about your business needs, choose a service,<br />
+              and our team will get in touch with you shortly.
+            </p>
+
+            {/* 3 steps row */}
+            <div className="cta-steps-row">
+              <div className="cta-step">
+                <div className="cta-step-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span>Share Your<br />Details</span>
+              </div>
+              <div className="cta-step">
+                <div className="cta-step-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <span>Select Your<br />Service</span>
+              </div>
+              <div className="cta-step">
+                <div className="cta-step-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </div>
+                <span>We'll Reach<br />Out to You</span>
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <button className="cta-v2-btn" onClick="showToast('Opening contact form...')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Connect With Us</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </button>
-            <p className="cta-note">No credit card required. 14-day free trial.</p>
+
+            {/* Bottom note */}
+            <p className="cta-v2-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+              Fill the form &amp; our experts will get back to you!
+            </p>
+
           </div>
         </div>
       </section>
