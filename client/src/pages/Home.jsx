@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -1870,7 +1870,7 @@ const Home = () => {
 
             {/* Secure badge top-right */}
             <div className="cta-secure-badge">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
               <span>100% Secure<br />&amp; Private</span>
             </div>
 
@@ -1894,12 +1894,18 @@ const Home = () => {
                 </div>
                 <span>Share Your<br />Details</span>
               </div>
+              
+              <div className="cta-step-divider"></div>
+              
               <div className="cta-step">
                 <div className="cta-step-icon">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 </div>
                 <span>Select Your<br />Service</span>
               </div>
+              
+              <div className="cta-step-divider"></div>
+              
               <div className="cta-step">
                 <div className="cta-step-icon">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -1908,16 +1914,27 @@ const Home = () => {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <button className="cta-v2-btn" onClick="showToast('Opening contact form...')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <span>Connect With Us</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+            {/* CTA Button Wrapper for sparks */}
+            <div className="cta-btn-wrapper" style={{position: 'relative', display: 'inline-block'}}>
+              <svg className="cta-btn-sparks" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4dd9c8" strokeWidth="2.5" strokeLinecap="round" style={{position: 'absolute', top: '-12px', left: '-12px', zIndex: 2}}>
+                <path d="M12 8 V1" />
+                <path d="M8 12 L1 12" />
+                <path d="M9 9 L3 3" />
+              </svg>
+              
+              <button className="cta-v2-btn" onClick={() => window.location.href = 'https://errorinfotech.in/'}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Connect With Us</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
 
             {/* Bottom note */}
             <p className="cta-v2-note">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4dd9c8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{transform: 'rotate(180deg) scaleY(-1)'}}>
+                <path d="M9 10h9a3 3 0 0 1 3 3v4" />
+                <path d="M13 6l-4 4 4 4" />
+              </svg>
               Fill the form &amp; our experts will get back to you!
             </p>
 

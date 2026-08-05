@@ -1,4 +1,4 @@
-﻿/* Premium Senior Product Designer NexaCRM Stylesheet */
+/* Premium Senior Product Designer NexaCRM Stylesheet */
 
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
@@ -4047,8 +4047,8 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Card wrapper ──────────────────────────── */
 .cta-banner-v2 {
-  background: linear-gradient(135deg, #1a6b5c 0%, #237d6c 25%, #1e7a6a 50%, #145749 75%, #1a6b5c 100%);
-  background-size: 300% 300%;
+  background: linear-gradient(135deg, #0e5245 0%, #0b3f35 100%);
+  background-size: cover;
   border-radius: 24px;
   padding: 4rem 3rem;
   text-align: center;
@@ -4070,7 +4070,6 @@ a { color: inherit; text-decoration: none; }
 .cta-banner-v2.active {
   opacity: 1;
   transform: translateY(0) scale(1);
-  animation: ctaBgShift 10s ease infinite;
 }
 
 /* Once active, stagger every child element — using transition (not animation)
@@ -4100,12 +4099,22 @@ a { color: inherit; text-decoration: none; }
   transform: translateX(0);
   transition: opacity 0.5s ease 0.60s, transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.60s;
 }
-.cta-banner-v2.active .cta-step:nth-child(2) {
+.cta-banner-v2.active .cta-step-divider:nth-child(2) {
+  opacity: 1;
+  transform: scaleY(1);
+  transition: opacity 0.5s ease 0.65s, transform 0.5s ease 0.65s;
+}
+.cta-banner-v2.active .cta-step:nth-child(3) {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 0.5s ease 0.75s, transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.75s;
 }
-.cta-banner-v2.active .cta-step:nth-child(3) {
+.cta-banner-v2.active .cta-step-divider:nth-child(4) {
+  opacity: 1;
+  transform: scaleY(1);
+  transition: opacity 0.5s ease 0.80s, transform 0.5s ease 0.80s;
+}
+.cta-banner-v2.active .cta-step:nth-child(5) {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 0.5s ease 0.90s, transform 0.5s cubic-bezier(0.22,1,0.36,1) 0.90s;
@@ -4159,8 +4168,8 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(77, 217, 200, 0.4);
   padding: 0.45rem 1.2rem;
   border-radius: 9999px;
   font-size: 0.88rem;
@@ -4177,22 +4186,22 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   top: 1.5rem;
   right: 1.75rem;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: #ffffff;
+  border: none;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.15rem;
-  color: white;
-  font-size: 0.62rem;
+  color: #0d4a3e;
+  font-size: 0.58rem;
   font-weight: 700;
   text-align: center;
   line-height: 1.3;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   opacity: 0;
   transition: opacity 0.4s ease 0.35s;
 }
@@ -4225,12 +4234,12 @@ a { color: inherit; text-decoration: none; }
 .cta-v2-accent::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 0;
+  bottom: -8px;
+  left: -5%;
   width: 0;
-  height: 3px;
-  background: #4dd9c8;
-  border-radius: 2px;
+  height: 12px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M2 15 Q 50 5 100 12 T 198 10' fill='none' stroke='%234dd9c8' stroke-width='4' stroke-linecap='round' /%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  border-radius: 0;
   opacity: 0;
 }
 
@@ -4249,8 +4258,17 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.5rem;
-  margin-bottom: 2rem;
+  gap: 1.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.cta-step-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: center;
 }
 
 .cta-step {
@@ -4301,7 +4319,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 9999px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
   transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
   margin-bottom: 1.25rem;
   position: relative;
@@ -4358,6 +4376,10 @@ a { color: inherit; text-decoration: none; }
   font-style: italic;
   opacity: 0;
   transform: translateY(10px);
+}
+
+.cta-btn-sparks {
+  animation: ctaBadgePulse 2s ease-in-out infinite;
 }
 
 /* ── Responsive ────────────────────────────── */
