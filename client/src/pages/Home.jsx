@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -10,6 +10,21 @@ import LiveDashboardPreview from '../components/LiveDashboardPreview';
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
+  const monitorRef = useRef(null);
+  const [monitorScale, setMonitorScale] = useState(1);
+
+  useEffect(() => {
+    if (!monitorRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        setMonitorScale(Math.min(1, width / 1450));
+      }
+    });
+    observer.observe(monitorRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     // Injected from d:/demo/script.js
     // NexaCRM Interactive JavaScript
@@ -636,7 +651,7 @@ const Home = () => {
           <div className="hero-grid">
 
             {/*  Left Hero Column  */}
-            <div className="hero-left-content reveal" style={{ paddingLeft: '0', marginLeft: '-14rem' }}>
+            <div className="hero-left-content reveal" style={{ paddingLeft: '0', marginLeft: '-12rem' }}>
               <div className="hero-badge-pill">
                 <span className="badge-tag">NEW ↗</span>
                 <span>Error Infotech 2.0 is now live</span>
@@ -679,7 +694,7 @@ const Home = () => {
 
             {/*  Right Hero Visual Monitor Frame  */}
             <div className="hero-visual-container reveal">
-              <div className="monitor-frame">
+              <div className="monitor-frame" ref={monitorRef}>
                 <div className="monitor-header">
                   <div className="window-dots">
                     <div className="dot dot-red"></div>
@@ -689,8 +704,13 @@ const Home = () => {
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>Error Infotech Dashboard</div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sarah Chen ▾</div>
                 </div>
-                <div style={{ padding: '0', display: 'flex', height: '614px', pointerEvents: 'none', userSelect: 'none' }}>
-                  <LiveDashboardPreview />
+                <div style={{ overflow: 'hidden', width: '100%', height: `${750 * monitorScale}px` }}>
+                  <div style={{
+                    padding: '0', display: 'flex', height: '750px', width: '1450px',
+                    transform: `scale(${monitorScale})`, transformOrigin: 'top left'
+                  }}>
+                    <LiveDashboardPreview />
+                  </div>
                 </div>
               </div>
             </div>
@@ -699,36 +719,79 @@ const Home = () => {
         </div>
       </header>
 
-      {/*  Logo Ribbon Bar Section (Light Contrast Bar)  */}
-      <section className="logo-ribbon-section">
-        <div className="container">
-          <div className="logo-ribbon-container">
-            <div className="ribbon-heading">
-              TRUSTED BY TEAMS THAT GROW FAST
-            </div>
-            <div className="logos-wrapper">
-              <div className="logo-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
-                <span>Acme Corp.</span>
-              </div>
-              <div className="logo-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
-                <span>Cloudix</span>
-              </div>
-              <div className="logo-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg>
-                <span>BrightEdge</span>
-              </div>
-              <div className="logo-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
-                <span>Penta Labs</span>
-              </div>
-              <div className="logo-item">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                <span>InnovaCo</span>
-              </div>
-            </div>
-          </div>
+      {/*  Logo Ribbon Bar Section (Marquee)  */}
+      <section className="logo-ribbon-section" style={{ overflow: 'hidden', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', padding: '1.5rem 0', background: 'rgba(26, 107, 92, 0.05)' }}>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes scrollMarquee {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            @keyframes textPulse {
+              0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+              50% { filter: hue-rotate(15deg) brightness(1.15); }
+            }
+            .marquee-wrapper {
+              display: flex;
+              width: fit-content;
+              animation: scrollMarquee 25s linear infinite;
+            }
+            .marquee-text {
+              font-family: var(--font-body);
+              font-style: italic;
+              font-weight: 800;
+              font-size: 1.25rem;
+              background: linear-gradient(90deg, #1a6b5c, #2a9d8f, #e07060);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              text-transform: uppercase;
+              letter-spacing: 3px;
+              animation: textPulse 4s ease-in-out infinite;
+              display: flex;
+              align-items: center;
+              padding-right: 3rem;
+            }
+            .marquee-separator {
+              margin: 0 3rem;
+              color: #e07060;
+              -webkit-text-fill-color: #e07060;
+              font-size: 1.5rem;
+            }
+          `
+        }} />
+        <div className="marquee-wrapper">
+          <span className="marquee-text">
+            SMART CRM <span className="marquee-separator">&bull;</span>
+            INTELLIGENT ERP <span className="marquee-separator">&bull;</span>
+            WORKFLOW AUTOMATION <span className="marquee-separator">&bull;</span>
+            BUSINESS INTELLIGENCE <span className="marquee-separator">&bull;</span>
+            SEAMLESS COLLABORATION <span className="marquee-separator">&bull;</span>
+            SCALABLE GROWTH <span className="marquee-separator">&bull;</span>
+          </span>
+          <span className="marquee-text">
+            SMART CRM <span className="marquee-separator">&bull;</span>
+            INTELLIGENT ERP <span className="marquee-separator">&bull;</span>
+            WORKFLOW AUTOMATION <span className="marquee-separator">&bull;</span>
+            BUSINESS INTELLIGENCE <span className="marquee-separator">&bull;</span>
+            SEAMLESS COLLABORATION <span className="marquee-separator">&bull;</span>
+            SCALABLE GROWTH <span className="marquee-separator">&bull;</span>
+          </span>
+          <span className="marquee-text">
+            SMART CRM <span className="marquee-separator">&bull;</span>
+            INTELLIGENT ERP <span className="marquee-separator">&bull;</span>
+            WORKFLOW AUTOMATION <span className="marquee-separator">&bull;</span>
+            BUSINESS INTELLIGENCE <span className="marquee-separator">&bull;</span>
+            SEAMLESS COLLABORATION <span className="marquee-separator">&bull;</span>
+            SCALABLE GROWTH <span className="marquee-separator">&bull;</span>
+          </span>
+          <span className="marquee-text">
+            SMART CRM <span className="marquee-separator">&bull;</span>
+            INTELLIGENT ERP <span className="marquee-separator">&bull;</span>
+            WORKFLOW AUTOMATION <span className="marquee-separator">&bull;</span>
+            BUSINESS INTELLIGENCE <span className="marquee-separator">&bull;</span>
+            SEAMLESS COLLABORATION <span className="marquee-separator">&bull;</span>
+            SCALABLE GROWTH <span className="marquee-separator">&bull;</span>
+          </span>
         </div>
       </section>
 
@@ -1628,7 +1691,7 @@ const Home = () => {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Admin ▾</div>
                   </div>
                   <div style={{ padding: '0', display: 'block', height: 'clamp(450px, 65vw, 670px)', overflow: 'hidden', position: 'relative' }}>
-                    
+
                     {/* Right Side: Main Dashboard (Scrollable via wrapper, Non-interactive) */}
                     <div className="custom-scroll" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
                       <div style={{ width: '100%', height: 'calc(1600px * 0.8695)' }}></div>
@@ -1887,7 +1950,7 @@ const Home = () => {
 
             {/* Top label pill */}
             <div className="cta-label-pill">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
               <span>Let's Work Together</span>
             </div>
 
@@ -1913,48 +1976,48 @@ const Home = () => {
             <div className="cta-steps-row">
               <div className="cta-step">
                 <div className="cta-step-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 </div>
                 <span>Share Your<br />Details</span>
               </div>
-              
+
               <div className="cta-step-divider"></div>
-              
+
               <div className="cta-step">
                 <div className="cta-step-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
                 </div>
                 <span>Select Your<br />Service</span>
               </div>
-              
+
               <div className="cta-step-divider"></div>
-              
+
               <div className="cta-step">
                 <div className="cta-step-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
                 </div>
                 <span>We'll Reach<br />Out to You</span>
               </div>
             </div>
 
             {/* CTA Button Wrapper for sparks */}
-            <div className="cta-btn-wrapper" style={{position: 'relative', display: 'inline-block'}}>
-              <svg className="cta-btn-sparks" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4dd9c8" strokeWidth="2.5" strokeLinecap="round" style={{position: 'absolute', top: '-12px', left: '-12px', zIndex: 2}}>
+            <div className="cta-btn-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
+              <svg className="cta-btn-sparks" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4dd9c8" strokeWidth="2.5" strokeLinecap="round" style={{ position: 'absolute', top: '-12px', left: '-12px', zIndex: 2 }}>
                 <path d="M12 8 V1" />
                 <path d="M8 12 L1 12" />
                 <path d="M9 9 L3 3" />
               </svg>
-              
+
               <button className="cta-v2-btn" onClick={() => window.location.href = 'https://errorinfotech.in/'}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                 <span>Connect With Us</span>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </button>
             </div>
 
             {/* Bottom note */}
             <p className="cta-v2-note">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4dd9c8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{transform: 'rotate(180deg) scaleY(-1)'}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4dd9c8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(180deg) scaleY(-1)' }}>
                 <path d="M9 10h9a3 3 0 0 1 3 3v4" />
                 <path d="M13 6l-4 4 4 4" />
               </svg>

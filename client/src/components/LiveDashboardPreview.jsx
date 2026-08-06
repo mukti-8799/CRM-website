@@ -200,11 +200,11 @@ const LiveDashboardPreview = () => {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
               <input type="text" placeholder="Search..." style={{ border: 'none', background: 'none', outline: 'none', fontSize: '0.85rem', width: '100%' }} />
             </div>
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#334155' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#334155', whiteSpace: 'nowrap' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
               Export
             </div>
-            <div style={{ background: '#1a6b5c', border: '1px solid #1a6b5c', borderRadius: '8px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', cursor: 'pointer' }}>
+            <div style={{ background: '#1a6b5c', border: '1px solid #1a6b5c', borderRadius: '8px', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', cursor: 'pointer', whiteSpace: 'nowrap' }}>
               + Add New
             </div>
           </div>
@@ -270,6 +270,7 @@ const LiveDashboardPreview = () => {
   return (
     <div style={{
       width: '100%',
+      minWidth: '950px',
       height: '100%',
       minHeight: '100%',
       display: 'flex',
@@ -279,7 +280,7 @@ const LiveDashboardPreview = () => {
       fontFamily: '"Inter", sans-serif'
     }}>
       {/* Sidebar */}
-      <div style={{
+      <div className="dashboard-scroll-area" style={{
         width: '240px',
         background: '#f8fafc',
         borderRight: '1px solid #e2e8f0',
@@ -384,13 +385,13 @@ const LiveDashboardPreview = () => {
             <div style={{ fontWeight: '800', fontSize: '1rem', letterSpacing: '-0.5px' }}>ERISCALE</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-            <div style={{ border: '1px solid #e2e8f0', borderRadius: '20px', padding: '0.4rem 1rem', fontSize: '0.85rem', fontWeight: '600', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ border: '1px solid #e2e8f0', borderRadius: '20px', padding: '0.4rem 1rem', fontSize: '0.85rem', fontWeight: '600', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
               Select Category
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8fafc', padding: '0.3rem 0.8rem 0.3rem 0.3rem', borderRadius: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8fafc', padding: '0.3rem 0.8rem 0.3rem 0.3rem', borderRadius: '20px', whiteSpace: 'nowrap' }}>
               <div style={{ width: '28px', height: '28px', background: '#3b82f6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.8rem' }}>A</div>
               <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#0f172a' }}>Admin User</span>
             </div>
@@ -398,7 +399,7 @@ const LiveDashboardPreview = () => {
         </div>
 
         {/* Scrollable Dashboard Area */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1.5rem 3rem' }}>
+        <div className="dashboard-scroll-area" style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1.5rem 3rem' }}>
           {renderContent()}
         </div>
 
