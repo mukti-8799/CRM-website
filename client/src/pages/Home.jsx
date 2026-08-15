@@ -18,7 +18,7 @@ const Home = () => {
     const observer = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const width = entry.contentRect.width;
-        setMonitorScale(Math.min(1, width / 1450));
+        setMonitorScale(Math.min(1, width / 1350));
       }
     });
     observer.observe(monitorRef.current);
@@ -517,6 +517,7 @@ const Home = () => {
       updatePanelClasses(0);
 
       const goToCard = (idx) => {
+        if (window.innerWidth <= 860) return;
         isCardAnimating = true;
         updatePanelClasses(idx);
 
@@ -533,25 +534,27 @@ const Home = () => {
         });
       };
 
-      ScrollTrigger.create({
-        id: 'formatScrollTrigger',
-        trigger: formatSection,
-        start: 'center center',
-        end: '+=50', // Minimal pin window since we handle logic via event trap
-        pin: true,
-        onEnter: () => {
-          if (currentCardIdx === 0 && !trapped) {
-            trapped = true;
-            if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(true);
+      if (window.innerWidth > 860) {
+        ScrollTrigger.create({
+          id: 'formatScrollTrigger',
+          trigger: formatSection,
+          start: 'center center',
+          end: '+=50', // Minimal pin window since we handle logic via event trap
+          pin: true,
+          onEnter: () => {
+            if (currentCardIdx === 0 && !trapped) {
+              trapped = true;
+              if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(true);
+            }
+          },
+          onEnterBack: () => {
+            if (currentCardIdx === totalCards - 1 && !trapped) {
+              trapped = true;
+              if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(true);
+            }
           }
-        },
-        onEnterBack: () => {
-          if (currentCardIdx === totalCards - 1 && !trapped) {
-            trapped = true;
-            if (window.__chaosScrollTrapped) window.__chaosScrollTrapped(true);
-          }
-        }
-      });
+        });
+      }
 
       const releaseTrap = (direction) => {
         trapped = false;
@@ -582,6 +585,7 @@ const Home = () => {
       };
 
       window.__formatWheelHandler = (e) => {
+        if (window.innerWidth <= 860) return;
         if (trapped) {
           e.preventDefault();
           handleIntent(e.deltaY);
@@ -590,9 +594,11 @@ const Home = () => {
 
       let touchStartY = 0;
       window.__formatTouchStart = (e) => {
+        if (window.innerWidth <= 860) return;
         if (trapped) touchStartY = e.touches[0].clientY;
       };
       window.__formatTouchMove = (e) => {
+        if (window.innerWidth <= 860) return;
         if (trapped) {
           e.preventDefault();
           const deltaY = touchStartY - e.touches[0].clientY;
@@ -651,7 +657,7 @@ const Home = () => {
           <div className="hero-grid">
 
             {/*  Left Hero Column  */}
-            <div className="hero-left-content reveal" style={{ paddingLeft: '0', marginLeft: '-12rem' }}>
+            <div className="hero-left-content reveal">
               <div className="hero-badge-pill">
                 <span className="badge-tag">NEW ↗</span>
                 <span>Error Infotech 2.0 is now live</span>
@@ -706,7 +712,7 @@ const Home = () => {
                 </div>
                 <div style={{ overflow: 'hidden', width: '100%', height: `${750 * monitorScale}px` }}>
                   <div style={{
-                    padding: '0', display: 'flex', height: '750px', width: '1450px',
+                    padding: '0', display: 'flex', height: '750px', width: '1350px',
                     transform: `scale(${monitorScale})`, transformOrigin: 'top left'
                   }}>
                     <LiveDashboardPreview />
