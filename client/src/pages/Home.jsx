@@ -669,7 +669,7 @@ const Home = () => {
 
               <div className="annotation-bubble">
                 <span>Close more. Grow faster.</span>
-                <svg width="40" height="20" viewBox="0 0 50 25" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="18" height="20" viewBox="0 0 50 25" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M 5 20 Q 25 5 45 15" strokeDasharray="3 3" />
                   <polyline points="40 10 45 15 38 18" />
                 </svg>
@@ -699,7 +699,7 @@ const Home = () => {
             </div>
 
             {/*  Right Hero Visual Monitor Frame  */}
-            <div className="hero-visual-container reveal">
+            <div className="hero-visual-container reveal" style={{ width: '150%', marginRight: '-7%', zIndex: 10 }}>
               <div className="monitor-frame" ref={monitorRef}>
                 <div className="monitor-header">
                   <div className="window-dots">
@@ -710,9 +710,9 @@ const Home = () => {
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>Error Infotech Dashboard</div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sarah Chen ▾</div>
                 </div>
-                <div style={{ overflow: 'hidden', width: '100%', height: `${750 * monitorScale}px` }}>
+                <div style={{ overflow: 'hidden', width: '100%', height: `${1000 * monitorScale}px` }}>
                   <div style={{
-                    padding: '0', display: 'flex', height: '750px', width: '1350px',
+                    padding: '0', display: 'flex', height: '1000px', width: '1350px',
                     transform: `scale(${monitorScale})`, transformOrigin: 'top left'
                   }}>
                     <LiveDashboardPreview />
@@ -862,7 +862,7 @@ const Home = () => {
         position: relative;
         display: block;
         width: 100%;
-        max-width: 1260px;
+        max-width: 1100px;
         margin-left: auto;
         margin-right: auto;
         height: calc(60vh + 1cm);
@@ -1542,7 +1542,8 @@ const Home = () => {
         }
         .erp-lcol {
           order: 2;
-          margin-left: 12rem;
+          margin-left: 5rem;
+          min-width: 0;
           transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
           opacity:0; transform:translateX(44px);
         }
@@ -1550,8 +1551,8 @@ const Home = () => {
         /* image col — now on left, slides in from left */
         .erp-rcol {
           order: 1;
-          width: 155%;
-          margin-left: -35%;
+          width: 110%;
+          margin-left: -10%;
           transition: opacity 0.95s cubic-bezier(0.22,1,0.36,1) 0.12s, transform 0.95s cubic-bezier(0.22,1,0.36,1) 0.12s;
           opacity:0; transform:translateX(-52px) scale(0.97); position:relative;
         }
@@ -1564,7 +1565,7 @@ const Home = () => {
           display:inline-flex; align-items:center; gap:0.55rem;
           background:rgba(42,157,143,0.10); border:1px solid rgba(26,107,92,0.22);
           border-radius:9999px; padding:0.36rem 1rem;
-          font-size:0.73rem; font-weight:800; letter-spacing:0.10em;
+          font-size:0.50rem; font-weight:800; letter-spacing:0.10em;
           color:#1a6b5c; text-transform:uppercase; margin-bottom:1.7rem;
         }
         .erp-dot {
@@ -1574,7 +1575,7 @@ const Home = () => {
         @keyframes erpP { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.6);opacity:0.5;} }
         .erp-h1 {
           font-family:'Outfit',sans-serif;
-          font-size:clamp(2.4rem,3.8vw,3.3rem); font-weight:900;
+          font-size:clamp(2.2rem,3.4vw,3.1rem); font-weight:900;
           line-height:1.06; letter-spacing:-0.025em; color:#111a16; margin-bottom:0.6rem;
         }
         .erp-h1 .eg {
@@ -1607,12 +1608,12 @@ const Home = () => {
         }
         .erp-fi svg { color:#1a6b5c; }
         .erp-fs { font-size:0.78rem; font-weight:400; color:#7a9088; margin-top:1px; display:block; }
-        .erp-btns { display:flex; align-items:center; gap:0.9rem; flex-wrap:wrap; }
+        .erp-btns { display:flex; flex-direction:column; align-items:flex-start; gap:0.9rem; }
         .erp-bf {
           display:inline-flex; align-items:center; gap:0.5rem;
           background:linear-gradient(135deg,#1a6b5c 0%,#2a9d8f 100%);
-          color:#fff; border:none; border-radius:9999px; padding:0.78rem 1.9rem;
-          font-family:'Outfit',sans-serif; font-size:0.9rem; font-weight:700;
+          color:#fff; border:none; border-radius:9999px; padding:0.5rem 1.5rem;
+          font-family:'Outfit',sans-serif; font-size:1.1rem; font-weight:700;
           cursor:pointer; box-shadow:0 4px 22px rgba(26,107,92,0.30);
           transition:transform 0.22s,box-shadow 0.22s; letter-spacing:0.01em;
         }
@@ -1620,8 +1621,8 @@ const Home = () => {
         .erp-bo {
           display:inline-flex; align-items:center; gap:0.45rem;
           background:transparent; color:#1a6b5c; border:1.5px solid rgba(26,107,92,0.32);
-          border-radius:9999px; padding:0.75rem 1.5rem;
-          font-family:'Outfit',sans-serif; font-size:0.88rem; font-weight:600;
+          border-radius:9999px; padding:1rem 2.5rem;
+          font-family:'Outfit',sans-serif; font-size:1.1rem; font-weight:600;
           cursor:pointer; transition:background 0.2s,border-color 0.2s,transform 0.2s;
         }
         .erp-bo:hover { background:rgba(26,107,92,0.07); border-color:#1a6b5c; transform:translateY(-1px); }
@@ -1722,7 +1723,7 @@ const Home = () => {
                 Unify your processes, connect your teams, and gain real-time visibility with a powerful ERP built for modern businesses.
               </p>
 
-              <div className="hero-cta-group">
+              <div className="hero-cta-group" style={{ flexWrap: 'wrap' }}>
                 <button className="btn-primary btn-lg" onClick={() => window.location.href = 'https://active.erp.errorinfotech.in/'}>
                   <span>Explore ERP Modules</span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -1752,11 +1753,11 @@ const Home = () => {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: '600' }}>ERP Dashboard</div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Admin ▾</div>
                   </div>
-                  <div style={{ padding: '0', display: 'block', height: 'clamp(450px, 65vw, 670px)', overflow: 'hidden', position: 'relative' }}>
+                  <div style={{ padding: '0', display: 'block', height: 'clamp(350px, 55vw, 520px)', overflow: 'hidden', position: 'relative' }}>
 
                     {/* Right Side: Main Dashboard (Scrollable via wrapper, Non-interactive) */}
                     <div className="custom-scroll" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
-                      <div style={{ width: '100%', height: 'calc(1600px * 0.8695)' }}></div>
+                      <div style={{ width: '100%', height: 'calc(1600px * 0.70)' }}></div>
                       <iframe
                         src="https://active.erp.errorinfotech.in"
                         title="ERP Dashboard Main Content"
@@ -1764,9 +1765,9 @@ const Home = () => {
                           position: 'absolute',
                           top: 0,
                           left: 0,
-                          width: '115%',
-                          height: '1600px',
-                          transform: 'scale(0.8695) translateZ(0)',
+                          width: '143%',
+                          height: '1100px',
+                          transform: 'scale(0.70) translateZ(0)',
                           transformOrigin: 'top left',
                           border: 'none',
                           pointerEvents: 'none',
@@ -1779,7 +1780,7 @@ const Home = () => {
                     </div>
 
                     {/* Left Side: Sidebar (Interactive, Native scroll, Clipped to left 230px) */}
-                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', clipPath: 'inset(0 calc(100% - 230px) 0 0)', pointerEvents: 'auto' }}>
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', clipPath: 'inset(0 calc(100% - 200px) 0 0)', pointerEvents: 'auto' }}>
                       <iframe
                         src="https://active.erp.errorinfotech.in"
                         title="ERP Dashboard Sidebar"
@@ -1787,9 +1788,9 @@ const Home = () => {
                           position: 'absolute',
                           top: 0,
                           left: 0,
-                          width: '115%',
-                          height: '115%',
-                          transform: 'scale(0.8695) translateZ(0)',
+                          width: '143%',
+                          height: '143%',
+                          transform: 'scale(0.70) translateZ(0)',
                           transformOrigin: 'top left',
                           border: 'none',
                           WebkitOverflowScrolling: 'touch',

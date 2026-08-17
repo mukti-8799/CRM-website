@@ -90,10 +90,10 @@
   padding: 0.5rem 1rem;
   border-radius: var(--radius-sm);
   color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
   text-decoration: none;
 }
 
@@ -126,7 +126,7 @@
 }
 
 #page-title {
-  font-size: 2rem;
+  font-size: 4rem;
   margin: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -138,7 +138,7 @@
 
 .btn-sm {
   padding: 0.5rem 1rem;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 /* Dashboard Content & Widgets */
@@ -160,7 +160,7 @@
   border: 1px solid var(--border-dark);
   border-radius: var(--radius-md);
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -174,7 +174,9 @@
 .stat-box::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
   opacity: 0;
@@ -186,7 +188,7 @@
 }
 
 .stat-label {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
@@ -195,7 +197,7 @@
 }
 
 .stat-val {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--text-white);
   display: flex;
@@ -204,7 +206,7 @@
 }
 
 .stat-change {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #10b981;
   font-weight: 600;
   background: rgba(16, 185, 129, 0.1);
@@ -229,12 +231,12 @@
   border: 1px solid var(--border-dark);
   border-radius: var(--radius-md);
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
 .panel-title {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: var(--text-white);
   margin-bottom: 1.5rem;
   font-weight: 700;
@@ -259,7 +261,9 @@
 }
 
 @keyframes drawChart {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Activity List */
@@ -345,8 +349,15 @@
 
 /* Animations */
 @keyframes contentFade {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fade-in {
@@ -359,6 +370,7 @@
     flex-direction: column;
     overflow-y: auto;
   }
+
   .dashboard-sidebar {
     width: 100%;
     height: auto;
@@ -366,9 +378,11 @@
     border-right: none;
     border-bottom: 1px solid var(--border-dark);
   }
+
   .dashboard-stats-row {
     grid-template-columns: 1fr 1fr;
   }
+
   .dashboard-panels {
     grid-template-columns: 1fr;
   }

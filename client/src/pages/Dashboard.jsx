@@ -28,7 +28,7 @@ const Dashboard = () => {
     },
     {
       id: 'saree-crm',
-      title: 'Saree Shop CRM',
+      title: 'CA CRM',
       items: [
         'Inventory Management',
         'Customer Database',
@@ -62,7 +62,7 @@ const Dashboard = () => {
     },
     {
       id: 'saree-erp',
-      title: 'Saree Shop ERP',
+      title: 'CA ERP',
       items: [
         'Inventory & Warehouse',
         'Manufacturing / Production',
@@ -104,7 +104,7 @@ const Dashboard = () => {
       ]
     },
     'saree-crm': {
-      title: 'Saree Shop CRM',
+      title: 'CA CRM',
       stats: [
         { label: 'Inventory Status', val: '84%', change: '-4%', isPositive: false },
         { label: 'Loyalty Members', val: '3,102', change: '+22%', isPositive: true },
@@ -134,7 +134,7 @@ const Dashboard = () => {
       ]
     },
     'saree-erp': {
-      title: 'Saree Shop ERP',
+      title: 'CA ERP',
       stats: [
         { label: 'Warehouse Stock', val: '12,450', change: '+2%', isPositive: true },
         { label: 'POS Sales', val: '$42k', change: '+18%', isPositive: true },
