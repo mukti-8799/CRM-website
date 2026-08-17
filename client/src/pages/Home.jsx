@@ -1220,6 +1220,113 @@ const Home = () => {
 
       /* Scroll indicator should match Panel 4 text color */
       .format-panel.fp-4 .format-tab-scroll { color: rgba(240, 248, 246, 0.85); }
+
+      /* â”€â”€ Mobile Responsiveness (Overrides ONLY for screens <= 860px) â”€â”€ */
+      @media (max-width: 860px) {
+        /* Hide Complexity Quote */
+        .chaos-quote-card {
+          display: none !important;
+        }
+
+        /* Stack "Everything you need to scale" cards vertically */
+        .format-accordion-wrapper {
+          height: auto !important;
+          min-height: unset !important;
+          max-height: unset !important;
+          display: flex !important;
+          flex-direction: column !important;
+          box-shadow: none !important;
+          gap: 1rem !important;
+        }
+
+        .format-panel {
+          position: relative !important;
+          left: 0 !important;
+          width: 100% !important;
+          border-radius: 16px !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+          padding-top: 50px !important; /* Make room for absolute tabs */
+          min-height: 400px;
+        }
+
+        /* Convert tabs to top headers instead of sidebars */
+        .format-panel-tab {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: auto !important;
+          width: 100% !important;
+          height: 50px !important;
+          flex-direction: row !important;
+          padding-top: 0 !important;
+          padding-left: 1.5rem !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          border-right: none !important;
+          border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+        }
+
+        .format-tab-num {
+          margin-bottom: 0 !important;
+          margin-right: 1rem !important;
+          font-size: 1.2rem !important;
+        }
+
+        .format-tab-title {
+          writing-mode: horizontal-tb !important;
+          transform: none !important;
+          opacity: 1 !important;
+          font-size: 1.2rem !important;
+        }
+
+        .format-tab-scroll {
+          display: none !important;
+        }
+
+        .format-panel-inner {
+          position: relative !important;
+          left: 0 !important;
+        }
+        
+        /* Inner body adjustments for mobile */
+        .format-panel-body {
+          flex-direction: column !important;
+          gap: 1rem !important;
+          padding: 1rem !important;
+        }
+
+        .format-panel-content {
+          flex: none !important;
+          width: 100% !important;
+        }
+
+        .format-panel-video-wrapper {
+          transform: none !important;
+          opacity: 1 !important;
+          width: 100% !important;
+        }
+        
+        .format-panel-top {
+          padding: 1rem 1rem 0 1rem !important;
+        }
+        
+        .format-panel-title {
+          transform: none !important;
+          opacity: 1 !important;
+          font-size: clamp(2rem, 8vw, 3rem) !important;
+        }
+        
+        .format-panel-content-title {
+          transform: none !important;
+          opacity: 1 !important;
+        }
+        
+        .format-panel-content-desc {
+          transform: none !important;
+          opacity: 1 !important;
+        }
+      }
     `}} />
       <section className="format-section" id="chaos">
         {/* â”€â”€ Chaos Quote Card â”€â”€ */}
@@ -1625,58 +1732,7 @@ const Home = () => {
                   <span>Watch Overview</span>
                 </button>
               </div>
-              <div className="premium-trust-badge" style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '14px',
-                background: 'rgba(255, 255, 255, 0.45)',
-                backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.7)',
-                padding: '10px 20px',
-                borderRadius: '16px',
-                boxShadow: '0 10px 30px rgba(26, 107, 92, 0.08)',
-                marginTop: '2rem'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {[
-                    "https://i.pravatar.cc/100?img=11",
-                    "https://i.pravatar.cc/100?img=47",
-                    "https://i.pravatar.cc/100?img=12"
-                  ].map((src, i) => (
-                    <img
-                      key={i}
-                      src={src}
-                      alt="User avatar"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        border: '2px solid white',
-                        marginLeft: i === 0 ? '0' : '-12px',
-                        zIndex: 3 - i,
-                        boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                      }}
-                    />
-                  ))}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                    <span style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      backgroundColor: '#10b981',
-                      boxShadow: '0 0 8px #10b981',
-                    }}></span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#1a6b5c', letterSpacing: '0.05em' }}>
-                      500+ ACTIVE TEAMS
-                    </span>
-                  </div>
-                  <span style={{ fontSize: '0.7rem', color: '#4b5563', fontWeight: '500' }}>
-                    Transforming their workflow daily.
-                  </span>
-                </div>
-              </div>
+
             </div>
 
             {/* LEFT: Image */}
