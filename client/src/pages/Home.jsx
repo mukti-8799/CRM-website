@@ -5,7 +5,8 @@ import Lenis from 'lenis';
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import LiveDashboardPreview from '../components/LiveDashboardPreview';
+import CRMDashboardPreview from '../components/CRMDashboardPreview';
+import ERPDashboardPreview from '../components/ERPDashboardPreview';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -715,7 +716,7 @@ const Home = () => {
                     padding: '0', display: 'flex', height: '1000px', width: '1350px',
                     transform: `scale(${monitorScale})`, transformOrigin: 'top left'
                   }}>
-                    <LiveDashboardPreview />
+                    <CRMDashboardPreview />
                   </div>
                 </div>
               </div>
@@ -1700,6 +1701,8 @@ const Home = () => {
           .erp-rcol.ei{transform:translateY(0) scale(1);}
           .erp-ring{display:none;}
         }
+        .custom-scroll::-webkit-scrollbar { display: none; }
+        .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
 
       <section className="erp-sec" id="erp-showcase">
@@ -1755,50 +1758,16 @@ const Home = () => {
                   </div>
                   <div style={{ padding: '0', display: 'block', height: 'clamp(350px, 55vw, 520px)', overflow: 'hidden', position: 'relative' }}>
 
-                    {/* Right Side: Main Dashboard (Scrollable via wrapper, Non-interactive) */}
-                    <div className="custom-scroll" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
-                      <div style={{ width: '100%', height: 'calc(1600px * 0.70)' }}></div>
-                      <iframe
-                        src="https://active.erp.errorinfotech.in"
-                        title="ERP Dashboard Main Content"
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '143%',
-                          height: '1100px',
-                          transform: 'scale(0.70) translateZ(0)',
-                          transformOrigin: 'top left',
-                          border: 'none',
-                          pointerEvents: 'none',
-                          WebkitOverflowScrolling: 'touch',
-                          willChange: 'transform',
-                          backfaceVisibility: 'hidden',
-                          filter: 'blur(0)'
-                        }}
-                      />
-                    </div>
-
-                    {/* Left Side: Sidebar (Interactive, Native scroll, Clipped to left 230px) */}
-                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', clipPath: 'inset(0 calc(100% - 200px) 0 0)', pointerEvents: 'auto' }}>
-                      <iframe
-                        src="https://active.erp.errorinfotech.in"
-                        title="ERP Dashboard Sidebar"
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '143%',
-                          height: '143%',
-                          transform: 'scale(0.70) translateZ(0)',
-                          transformOrigin: 'top left',
-                          border: 'none',
-                          WebkitOverflowScrolling: 'touch',
-                          willChange: 'transform',
-                          backfaceVisibility: 'hidden',
-                          filter: 'blur(0)'
-                        }}
-                      />
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '143%',
+                      height: '143%',
+                      transform: 'scale(0.70) translateZ(0)',
+                      transformOrigin: 'top left'
+                    }}>
+                      <ERPDashboardPreview />
                     </div>
 
                   </div>
